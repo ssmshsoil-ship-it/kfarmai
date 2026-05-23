@@ -1,0 +1,7 @@
+﻿.env
+*.env
+__pycache__/
+*.pyc
+03_data/
+02_dev/kfarm/
+02_dev/pytest-cache-files-*/

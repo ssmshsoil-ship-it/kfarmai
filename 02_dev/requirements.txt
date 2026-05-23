@@ -1,0 +1,9 @@
+﻿requests
+python-dotenv
+pandas
+pdfplumber
+folium
+flask
+sqlalchemy
+beautifulsoup4
+playwright

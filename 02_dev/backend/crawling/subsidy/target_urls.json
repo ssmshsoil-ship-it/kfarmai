@@ -1,0 +1,15 @@
+[
+  {
+    "region": "충청남도 부여군",
+    "url": "https://www.buyeo.go.kr/html/kr/news/news_040202.html",
+    "page_param": "GotoPage",
+    "max_pages": 5
+  },
+  {
+    "region": "충청남도 홍성군",
+    "url": "https://www.hongseong.go.kr/prog/saeolGosi/kor/sub03_0204/GOSI_ALL/list.do",
+    "page_param": "pageIndex",
+    "method": "post",
+    "max_pages": 5
+  }
+]
