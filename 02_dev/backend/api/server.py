@@ -71,10 +71,10 @@ def search():
     if intent in ["directory", "diagnosis"]:
         if exact:
             shops_res = supabase.table("pesticide_shops").select("id, name, sido, sigungu, address, phone, lat, lng").eq("name", keyword).limit(5).execute()
-            companies_res = supabase.table("agri_companies").select("id, name, category, address, website, phone").eq("name", keyword).limit(5).execute()
+            companies_res = supabase.table("agri_companies").select("id, name, category, address, website, phone, lat, lng").ilike("name", f"%{keyword}%").limit(5).execute()
         else:
             shops_res = supabase.table("pesticide_shops").select("id, name, sido, sigungu, address, phone, lat, lng").ilike("name", f"%{keyword}%").limit(20).execute()
-            companies_res = supabase.table("agri_companies").select("id, name, category, address, website, phone").ilike("name", f"%{keyword}%").limit(20).execute()
+            companies_res = supabase.table("agri_companies").select("id, name, category, address, website, phone, lat, lng").ilike("name", f"%{keyword}%").limit(20).execute()
         shops = shops_res.data
         companies = companies_res.data
     return jsonify({
