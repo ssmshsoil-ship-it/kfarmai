@@ -4,6 +4,10 @@ pandas
 pdfplumber
 folium
 flask
+flask-cors
 sqlalchemy
 beautifulsoup4
 playwright
+supabase
+openpyxl
+gunicorn

@@ -1,0 +1,11 @@
+﻿services:
+  - type: web
+    name: kfarmai-api
+    env: python
+    buildCommand: pip install -r 02_dev/requirements.txt
+    startCommand: gunicorn 02_dev.backend.api.server:app
+    envVars:
+      - key: SUPABASE_URL
+        value: https://xzetqijeucldbfgjuoes.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6ZXRxaWpldWNsZGJmZ2p1b2VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjIwODYsImV4cCI6MjA5NTEzODA4Nn0.QAizDLXQC1DrRi5C0sPahK6s_-6X4zkTEjzJZ6CFprw
