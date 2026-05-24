@@ -89,6 +89,24 @@ def intent_only():
     intent = classify_intent(keyword)
     return jsonify({"status": "ok", "keyword": keyword, "intent": intent})
 
+
+@app.route("/api/stats", methods=["GET"])
+def stats():
+    shops = supabase.table("pesticide_shops").select("id", count="exact").execute()
+    companies = supabase.table("agri_companies").select("id", count="exact").execute()
+    santo = supabase.table("agri_companies").select("id", count="exact").eq("category", "상토").execute()
+    seed = supabase.table("agri_companies").select("id", count="exact").eq("category", "종자").execute()
+    cpa = supabase.table("agri_companies").select("id", count="exact").eq("category", "작물보호제").execute()
+    fert = supabase.table("agri_companies").select("id", count="exact").eq("category", "비료").execute()
+    return jsonify({
+        "status": "ok",
+        "pesticide_shops": shops.count,
+        "santo": santo.count,
+        "seed": seed.count,
+        "cpa": cpa.count,
+        "fert": fert.count,
+    })
+
 @app.route("/api/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "message": "kFarmAI API 서버 정상 작동"})
