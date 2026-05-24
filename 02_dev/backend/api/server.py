@@ -4,7 +4,7 @@ from supabase import create_client
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://kfarmai.com", "https://www.kfarmai.com", "http://127.0.0.1:8080", "http://localhost:8080"])
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://xzetqijeucldbfgjuoes.supabase.co")
 SUPABASE_KEY = os.environ.get("SUPABASE_ANON_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6ZXRxaWpldWNsZGJmZ2p1b2VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjIwODYsImV4cCI6MjA5NTEzODA4Nn0.QAizDLXQC1DrRi5C0sPahK6s_-6X4zkTEjzJZ6CFprw")
@@ -58,21 +58,20 @@ def search_companies():
     result = query.limit(50).execute()
     return jsonify({"status": "ok", "count": len(result.data), "data": result.data})
 
-@app.route("/api/search", methods=["POST"])
+@app.route("/api/search", methods=["POST", "OPTIONS"])
 def search():
+    if request.method == "OPTIONS":
+        return jsonify({}), 200
     body = request.get_json()
     keyword = body.get("keyword", "")
     intent = classify_intent(keyword)
-
     shops = []
     companies = []
-
     if intent in ["directory", "diagnosis"]:
         shops_res = supabase.table("pesticide_shops").select("id, name, sido, sigungu, address, phone, lat, lng").ilike("name", f"%{keyword}%").limit(20).execute()
         companies_res = supabase.table("agri_companies").select("id, name, category, address, website").ilike("name", f"%{keyword}%").limit(20).execute()
         shops = shops_res.data
         companies = companies_res.data
-
     return jsonify({
         "status": "ok",
         "keyword": keyword,
@@ -81,8 +80,10 @@ def search():
         "companies": companies
     })
 
-@app.route("/api/intent", methods=["POST"])
+@app.route("/api/intent", methods=["POST", "OPTIONS"])
 def intent_only():
+    if request.method == "OPTIONS":
+        return jsonify({}), 200
     body = request.get_json()
     keyword = body.get("keyword", "")
     intent = classify_intent(keyword)
