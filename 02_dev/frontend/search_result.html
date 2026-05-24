@@ -215,7 +215,7 @@ function getQuery() {
 /* ── 검색 ── */
 function doSearch(q) {
   if (!q) return [];
-  fetch("http://127.0.0.1:5000/api/search", {
+  fetch("https://kfarmai.onrender.com/api/search", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({keyword: q})
