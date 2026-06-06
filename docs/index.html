@@ -540,14 +540,20 @@
       align-items: center;
       gap: 12px;
       padding: 14px;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .link-card:hover {
+      border-color: var(--link-point, var(--brand));
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--link-point, var(--brand)) 16%, transparent);
     }
 
     .link-icon {
       width: 46px;
       height: 46px;
       border-radius: 15px;
-      background: var(--brand-soft);
-      color: var(--brand);
+      background: var(--link-bg, var(--brand-soft));
+      color: var(--link-point, var(--brand));
     }
 
     .link-card p {
@@ -565,7 +571,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin-top: 12px;
     }
@@ -582,6 +588,10 @@
       display: block;
       color: var(--brand);
       font-size: 16px;
+    }
+
+    .agri-hero {
+      background: #1A237E;
     }
 
     .stat span {
@@ -904,14 +914,14 @@
           <div class="page-head">
             <div>
               <p class="eyebrow">AGRI DATA</p>
-              <h1>농자재와 지역 정보를<br>가까운 순서로 찾아요</h1>
+              <h1>필요한 농자재,<br>가까운 곳에서 찾아요</h1>
             </div>
             <span class="badge">3,019곳</span>
           </div>
 
-          <a class="hero-card" href="agri_map.html">
+          <a class="hero-card agri-hero" href="agri_map.html">
             <h2>전국 농약사 지도</h2>
-            <p>기존 kFarmAI 농자재 데이터와 지도 화면으로 바로 이동합니다.</p>
+            <p>전국 3,019개 농약사를 지도에서 찾아보세요</p>
             <span class="hero-action">지도 열기</span>
           </a>
 
@@ -919,40 +929,40 @@
             <div class="stat"><strong>15</strong><span>상토 회사</span></div>
             <div class="stat"><strong>57</strong><span>종자 회사</span></div>
             <div class="stat"><strong>39</strong><span>작물보호제</span></div>
+            <div class="stat"><strong>8</strong><span>비료 회사</span></div>
           </div>
 
           <section class="section">
             <div class="section-title">
               <strong>바로가기</strong>
-              <span>기존 페이지 연결</span>
             </div>
             <div class="link-list">
-              <a class="link-card" href="agri_map.html">
+              <a class="link-card" href="agri_map.html" style="--link-bg:#E3F2FD;--link-point:#1565C0;">
                 <span class="link-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z" stroke="currentColor" stroke-width="2"/><path d="M9 3v15M15 6v15" stroke="currentColor" stroke-width="2"/></svg></span>
                 <span><strong>농약사 찾기</strong><p>전국 농약사 목록과 지역 검색</p></span>
                 <span class="chev">›</span>
               </a>
-              <a class="link-card" href="map.html">
+              <a class="link-card" href="map.html" style="--link-bg:#E8F5E9;--link-point:#2E7D32;">
                 <span class="link-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-5.1 7-12A7 7 0 1 0 5 9c0 6.9 7 12 7 12Z" stroke="currentColor" stroke-width="2"/><path d="M12 12.2a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="2"/></svg></span>
                 <span><strong>전국 지도</strong><p>지도 기반 위치 탐색 화면</p></span>
                 <span class="chev">›</span>
               </a>
-              <a class="link-card" href="santo.html">
+              <a class="link-card" href="santo.html" style="--link-bg:#FFF8E1;--link-point:#F57F17;">
                 <span class="link-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19h16M6 19V8l6-4 6 4v11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 19v-7h6v7" stroke="currentColor" stroke-width="2"/></svg></span>
                 <span><strong>상토 회사</strong><p>상토 제조 및 공급사 정보</p></span>
                 <span class="chev">›</span>
               </a>
-              <a class="link-card" href="seed.html">
+              <a class="link-card" href="seed.html" style="--link-bg:#F3E5F5;--link-point:#6A1B9A;">
                 <span class="link-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M7 21c0-8 5-14 12-17-1 7-7 12-12 17Z" stroke="currentColor" stroke-width="2"/><path d="M7 21c1-5 4-8 9-11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
                 <span><strong>종자 회사</strong><p>종자 업체와 품목 정보</p></span>
                 <span class="chev">›</span>
               </a>
-              <a class="link-card" href="fert.html">
+              <a class="link-card" href="fert.html" style="--link-bg:#E0F7FA;--link-point:#00838F;">
                 <span class="link-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 20h14l-2-14H7L5 20Z" stroke="currentColor" stroke-width="2"/><path d="M9 10h6M10 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
                 <span><strong>비료 회사</strong><p>비료 제조사 및 유통 정보</p></span>
                 <span class="chev">›</span>
               </a>
-              <a class="link-card" href="news_sub.html">
+              <a class="link-card" href="news_sub.html" style="--link-bg:#FCE4EC;--link-point:#AD1457;">
                 <span class="link-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v16H5z" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
                 <span><strong>보조사업 소식</strong><p>지역별 농업 지원사업 아카이브</p></span>
                 <span class="chev">›</span>
