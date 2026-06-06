@@ -85,13 +85,47 @@
     display: flex; align-items: center; gap: 8px;
     background: #F3F4F6; border-radius: 12px;
     padding: 10px 12px; margin: 4px 0 8px;
+    position: relative;
   }
-  .search svg { width: 18px; height: 18px; color: #1D9E75; flex-shrink: 0; }
+  .search-btn {
+    width: 24px; height: 24px; border: 0; background: transparent;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+  }
+  .search-btn svg { width: 18px; height: 18px; color: #1D9E75; }
   .search input {
     flex: 1; border: none; background: transparent; outline: none;
     font-size: 13px; color: #111;
   }
   .search input::placeholder { color: #9CA3AF; }
+  .search-dd {
+    position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    box-shadow: 0 14px 36px rgba(0,0,0,.14); z-index: 30;
+    padding: 10px; display: none; max-height: 430px; overflow-y: auto;
+  }
+  .search-dd.open { display: block; }
+  .s-section { padding: 4px 0 8px; }
+  .s-section + .s-section { border-top: 1px solid var(--border); }
+  .s-head { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 900; color: var(--muted); padding: 5px 4px; }
+  .s-clear { border: 0; background: transparent; color: var(--green); font-size: 11px; font-weight: 800; cursor: pointer; }
+  .s-item {
+    display: flex; align-items: center; gap: 9px; padding: 9px 6px;
+    border-radius: 10px; cursor: pointer; color: inherit; text-decoration: none;
+  }
+  .s-item:hover { background: #F7F8FA; }
+  .s-ico { width: 24px; height: 24px; border-radius: 8px; background: var(--green-soft); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .s-main { flex: 1; min-width: 0; }
+  .s-title { font-size: 13px; font-weight: 800; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .s-meta { margin-top: 3px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .s-x { border: 0; background: transparent; color: #A1A7AE; font-size: 16px; cursor: pointer; padding: 4px; }
+  .search-mark { color: var(--green); font-weight: 900; background: transparent; }
+  .search-result-head {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 11px 12px; margin-bottom: 8px; font-size: 13px; font-weight: 900;
+  }
+  .search-close { width: 28px; height: 28px; border: 0; border-radius: 50%; background: #F3F4F6; color: #555; font-size: 17px; cursor: pointer; }
+  .search-group-title { font-size: 12px; font-weight: 900; color: var(--sub); margin: 12px 4px 8px; }
   .bell {
     position: relative; width: 30px; height: 30px;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
@@ -799,9 +833,12 @@
         </div>
       </div>
     </div>
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" placeholder="작물 증상, 질문, 농자재를 검색하세요" />
+    <div class="search" id="searchBox">
+      <button class="search-btn" type="button" onclick="runSearch()" aria-label="검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <input type="search" id="globalSearch" placeholder="작물 증상, 농약사, 농자재를 검색하세요" data-i18n-placeholder="searchPlaceholder" enterkeyhint="search" autocomplete="off" />
+      <div class="search-dd" id="searchDropdown"></div>
     </div>
     <div class="tabs">
       <div class="tab active" data-i="0" data-i18n="community">커뮤니티</div>
@@ -1044,6 +1081,11 @@
     </div>
   </div>
 </div>
+<script src="static/pesticide_data.js"></script>
+<script src="static/santo_data.js"></script>
+<script src="static/seed_data.js"></script>
+<script src="static/cpa_data.js"></script>
+<script src="static/fert_data.js"></script>
 <script>
 (function(){
   const pages = document.getElementById('pages');
@@ -1063,6 +1105,7 @@
     const cur = pages.children[current];
     if(resetScroll && cur) cur.scrollTop = 0;
   }
+  window.goMainPage = () => go(0);
   tabs.forEach(t => t.addEventListener('click', () => go(parseInt(t.dataset.i), true)));
 
   // Touch swipe
@@ -1160,7 +1203,8 @@ const I18N = {
     nearby: '주변',
     recentQuestions: '방금 올라온 질문',
     exploreChannels: '채널 둘러보기',
-    heroTitle: '이상하다 싶을 때,<br/>바로 여기'
+    heroTitle: '이상하다 싶을 때,<br/>바로 여기',
+    searchPlaceholder: '작물 증상, 농약사, 농자재를 검색하세요'
   },
   en: {
     community: 'Community',
@@ -1171,7 +1215,8 @@ const I18N = {
     nearby: 'Nearby',
     recentQuestions: 'Recent Questions',
     exploreChannels: 'Explore Channels',
-    heroTitle: 'When Something Feels Off,<br/>Start Here'
+    heroTitle: 'When Something Feels Off,<br/>Start Here',
+    searchPlaceholder: 'Search crops, pesticide shops, agri products...'
   }
 };
 function initLanguage(){
@@ -1185,6 +1230,10 @@ function applyLanguage(lang){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key = el.dataset.i18n;
     if(I18N[useLang][key]) el.innerHTML = I18N[useLang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.dataset.i18nPlaceholder;
+    if(I18N[useLang][key]) el.placeholder = I18N[useLang][key];
   });
   document.querySelectorAll('.lang-toggle').forEach(btn=>{
     btn.querySelector('.kr')?.classList.toggle('active', useLang === 'ko');
@@ -1268,6 +1317,172 @@ function defaultChannels(){return Object.entries(CHANNEL_CONFIG).map(([slug,cfg]
 function renderChannels(channels,grid,select){grid.innerHTML='';select.innerHTML='<option value="">채널을 선택하세요</option>';channels.forEach(ch=>{const cfg=CHANNEL_CONFIG[ch.slug]||{icon:'ic-chat',name:ch.name||'일반'};const card=document.createElement('div');card.className='channel';card.innerHTML=`<div class="ch-icon-wrap"><svg><use href="#${cfg.icon}"/></svg></div><div class="ch-name">${escHtml(ch.name||cfg.name)}</div>`;card.onclick=()=>filterByChannel(ch.id,ch.name||cfg.name);grid.appendChild(card);const opt=document.createElement('option');opt.value=ch.id;opt.textContent=ch.name||cfg.name;select.appendChild(opt);});}
 async function loadFeed(channelId=null){const feed=document.getElementById('recentFeed');if(!feed||!window._sb)return;feed.innerHTML='<div class="feed-loading"><div class="spinner"></div>불러오는 중...</div>';try{let query=_sb.from('posts').select('*, channels(name, slug)').order('created_at',{ascending:false}).limit(5);if(channelId)query=query.eq('channel_id',channelId);const {data}=await query;if(!data||data.length===0){feed.innerHTML='<div class="feed-loading">아직 질문이 없습니다.<br>첫 질문을 올려보세요.</div>';return;}feed.innerHTML='';data.forEach(post=>{const slug=post.channels?.slug||'';const badgeClass=CHANNEL_BADGE_COLORS[slug]||'green';const card=document.createElement('div');card.className='q-card';card.innerHTML=`<span class="ch-badge ${badgeClass}">${escHtml(post.channels?.name||'일반')}</span><div class="q-title">${escHtml(post.title)}</div><div class="q-meta"><span>${post.user_id?'회원':'익명 작성자'}</span><span>댓글 ${post.comment_count||0}</span><span>좋아요 ${post.like_count||0}</span><span>${getTimeAgo(post.created_at)}</span></div>`;feed.appendChild(card);});}catch(e){feed.innerHTML='<div class="feed-loading">불러오기 실패. 새로고침해주세요.</div>';}}
 function filterByChannel(id,name){loadFeed(id);const title=document.querySelector('#recentFeed')?.previousElementSibling?.querySelector('.section-title');if(title)title.textContent=`${name} 질문`;}
+const SEARCH_STORAGE_KEY='kfarmai_recent_searches';
+const CHO_LIST=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const AGRI_LINKS=[
+  {type:'map',label:'농약사',initial:'ㄴㅇㅅ',url:'agri_map.html',text:'농약사 - 지도에서 보기'},
+  {type:'material',label:'상토',initial:'ㅅㅌ',url:'santo.html',text:'상토 정보 보기'},
+  {type:'material',label:'종자',initial:'ㅈㅈ',url:'seed.html',text:'종자 정보 보기'},
+  {type:'material',label:'작물보호제',initial:'ㅈㅁㅂㅎㅈ',url:'cpa.html',text:'작물보호제 정보 보기'},
+  {type:'material',label:'비료',initial:'ㅂㄹ',url:'fert.html',text:'비료 정보 보기'}
+];
+const SEARCH_ALIASES=[
+  {label:'식물 병원',initial:'ㅅㅂ'},
+  {label:'질문',initial:'ㅈㅁ'},
+  {label:'농약사',initial:'ㄴㅇㅅ'},
+  {label:'상토',initial:'ㅅㅌ'},
+  {label:'비료',initial:'ㅂㄹ'}
+];
+function initSearch(){
+  const input=document.getElementById('globalSearch');
+  if(!input)return;
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runSearch();}});
+  input.addEventListener('input',debounce(()=>renderSearchDropdown(input.value.trim()),180));
+  input.addEventListener('focus',()=>{if(input.value.trim().length>=2)renderSearchDropdown(input.value.trim());});
+  document.addEventListener('click',e=>{if(!document.getElementById('searchBox')?.contains(e.target))closeSearchDropdown();});
+}
+function debounce(fn,delay){let timer;return(...args)=>{clearTimeout(timer);timer=setTimeout(()=>fn(...args),delay);};}
+async function renderSearchDropdown(raw){
+  const dd=document.getElementById('searchDropdown');
+  if(!dd)return;
+  const kw=normalizeKeyword(raw);
+  if(kw.length<2){closeSearchDropdown();return;}
+  dd.classList.add('open');
+  dd.innerHTML='<div class="feed-loading"><div class="spinner"></div>검색 중...</div>';
+  const posts=await searchPosts(kw,3);
+  const shopItems=getShopSuggestions(kw,2);
+  const matItems=getMaterialSuggestions(kw,2);
+  const recent=getRecentSearches();
+  dd.innerHTML=[
+    renderSuggestSection('커뮤니티 게시글',posts.map(p=>postSuggestHtml(p,kw))),
+    renderSuggestSection('농약사',shopItems.map(item=>linkSuggestHtml(item,kw,'지도'))),
+    renderSuggestSection('농자재',matItems.map(item=>linkSuggestHtml(item,kw,'정보'))),
+    renderRecentSection(recent)
+  ].filter(Boolean).join('');
+}
+function renderSuggestSection(title,items){
+  if(!items.length)return '';
+  return `<div class="s-section"><div class="s-head">${title}</div>${items.join('')}</div>`;
+}
+function postSuggestHtml(post,kw){
+  const slug=post.channels?.slug||'';
+  const badgeClass=CHANNEL_BADGE_COLORS[slug]||'green';
+  return `<div class="s-item" onclick="runSearch(decodeURIComponent('${encodeURIComponent(kw)}'))"><div class="s-ico">Q</div><div class="s-main"><div><span class="ch-badge ${badgeClass}">${escHtml(post.channels?.name||'일반')}</span></div><div class="s-title">${highlightText(post.title,kw)}</div><div class="s-meta">${getTimeAgo(post.created_at)}</div></div></div>`;
+}
+function linkSuggestHtml(item,kw,kind){
+  const url=`${item.url}?q=${encodeURIComponent(item.query||kw)}`;
+  return `<a class="s-item" href="${url}"><div class="s-ico">${kind==='지도'?'M':'I'}</div><div class="s-main"><div class="s-title">${highlightText(item.text,kw)}</div><div class="s-meta">${escHtml(item.meta||`${kind}에서 보기`)}</div></div></a>`;
+}
+function renderRecentSection(items){
+  if(!items.length)return '';
+  return `<div class="s-section"><div class="s-head"><span>최근 검색어</span><button class="s-clear" onclick="clearRecentSearches(event)">전체 삭제</button></div>${items.map(item=>`<div class="s-item" onclick="runSearch(decodeURIComponent('${encodeURIComponent(item)}'))"><div class="s-ico">R</div><div class="s-main"><div class="s-title">${escHtml(item)}</div></div><button class="s-x" onclick="removeRecentSearch(event,decodeURIComponent('${encodeURIComponent(item)}'))">×</button></div>`).join('')}</div>`;
+}
+async function runSearch(raw){
+  const input=document.getElementById('globalSearch');
+  const kw=normalizeKeyword(raw || input?.value || '');
+  if(!kw)return;
+  if(input)input.value=kw;
+  closeSearchDropdown();
+  saveRecentSearch(kw);
+  if(window.goMainPage)window.goMainPage();
+  const feed=document.getElementById('recentFeed');
+  if(!feed)return;
+  feed.innerHTML='<div class="feed-loading"><div class="spinner"></div>검색 중...</div>';
+  const posts=await searchPosts(kw,30);
+  const shops=getShopSuggestions(kw,20);
+  const materials=getMaterialSuggestions(kw,30);
+  renderSearchResults(kw,posts,shops,materials);
+}
+async function searchPosts(kw,limit){
+  if(!window._sb)return [];
+  try{
+    const like=`%${kw.replace(/[%_]/g,'')}%`;
+    const {data}=await _sb.from('posts').select('*, channels(name, slug)').or(`title.ilike.${like},content.ilike.${like}`).order('created_at',{ascending:false}).limit(limit);
+    let list=data||[];
+    if(isInitialQuery(kw)){
+      const {data:recent}=await _sb.from('posts').select('*, channels(name, slug)').order('created_at',{ascending:false}).limit(40);
+      list=(recent||[]).filter(p=>matchesSearchText(`${p.title||''} ${p.content||''} ${p.channels?.name||''}`,kw)).slice(0,limit);
+    }
+    return list;
+  }catch(e){return [];}
+}
+function renderSearchResults(kw,posts,shops,materials){
+  const feed=document.getElementById('recentFeed');
+  const total=posts.length+shops.length+materials.length;
+  const head=`<div class="search-result-head"><span>'${escHtml(kw)}' 검색 결과 ${total}개</span><button class="search-close" onclick="clearSearchResults()">×</button></div>`;
+  if(!total){feed.innerHTML=head+'<div class="feed-loading">검색 결과가 없습니다</div>';return;}
+  const postHtml=posts.map(post=>{
+    const slug=post.channels?.slug||'';
+    const badgeClass=CHANNEL_BADGE_COLORS[slug]||'green';
+    return `<div class="q-card"><span class="ch-badge ${badgeClass}">${escHtml(post.channels?.name||'일반')}</span><div class="q-title">${highlightText(post.title,kw)}</div><div class="q-meta"><span>${post.user_id?'회원':'익명 작성자'}</span><span>댓글 ${post.comment_count||0}</span><span>좋아요 ${post.like_count||0}</span><span>${getTimeAgo(post.created_at)}</span></div></div>`;
+  }).join('');
+  const shopHtml=shops.map(item=>resultLinkCard(item,kw,'농약사')).join('');
+  const materialHtml=materials.map(item=>resultLinkCard(item,kw,'농자재')).join('');
+  feed.innerHTML=head+
+    (posts.length?'<div class="search-group-title">커뮤니티 게시글</div>'+postHtml:'')+
+    (shops.length?'<div class="search-group-title">농약사 지도·로드뷰</div>'+shopHtml:'')+
+    (materials.length?'<div class="search-group-title">농자재 회사 정보</div>'+materialHtml:'');
+}
+function resultLinkCard(item,kw,badge){
+  return `<a class="q-card" href="${item.url}?q=${encodeURIComponent(item.query||kw)}" style="display:block;text-decoration:none;color:inherit"><span class="ch-badge teal">${badge}</span><div class="q-title">${highlightText(item.text,kw)}</div><div class="q-meta"><span>${escHtml(item.meta||'정보 보기')}</span></div></a>`;
+}
+function clearSearchResults(){
+  const input=document.getElementById('globalSearch');
+  if(input)input.value='';
+  closeSearchDropdown();
+  loadFeed();
+}
+function closeSearchDropdown(){document.getElementById('searchDropdown')?.classList.remove('open');}
+function getShopSuggestions(kw,limit=2){
+  const shops=typeof data!=='undefined'?data:[];
+  const matched=shops.filter(shop=>matchesSearchText([shop.name,shop.addr,shop.tel,shop.item,'농약사 농약방'].join(' '),kw)).slice(0,limit).map(shop=>({
+    type:'map',
+    url:'agri_map.html',
+    query:shop.name,
+    text:`${shop.name} - 지도·로드뷰에서 보기`,
+    meta:shop.addr||'지도에서 보기'
+  }));
+  if(matched.length)return matched;
+  return matchesSearchText('농약사 농약방 주변농약방 내 주변 농자재점 ㄴㅇㅅ',kw)?[
+    {...AGRI_LINKS[0],query:kw,text:`${kw} 농약사 - 지도·로드뷰에서 보기`,meta:'agri_map.html 검색'}
+  ]:[];
+}
+function getMaterialSuggestions(kw,limit=6){
+  const datasets=[
+    {kind:'상토',url:'santo.html',items:typeof santoData!=='undefined'?santoData:[]},
+    {kind:'종자',url:'seed.html',items:typeof seedData!=='undefined'?seedData:[]},
+    {kind:'작물보호제',url:'cpa.html',items:typeof cpaData!=='undefined'?cpaData:[]},
+    {kind:'비료',url:'fert.html',items:typeof fertData!=='undefined'?fertData:[]}
+  ];
+  const results=[];
+  datasets.forEach(ds=>{
+    ds.items.forEach(item=>{
+      const text=[ds.kind,item.company,item.products,item.addr,item.tel].join(' ');
+      if(matchesSearchText(text,kw)){
+        results.push({
+          type:'material',
+          url:ds.url,
+          query:item.company,
+          text:`${item.company} - ${ds.kind} 정보 보기`,
+          meta:item.products||item.addr||`${ds.kind} 검색`
+        });
+      }
+    });
+  });
+  if(results.length)return results.slice(0,limit);
+  if(matchesSearchText('농자재 농자재회사 농업자재 agri products',kw))return AGRI_LINKS.filter(item=>item.type==='material').map(item=>({...item,query:kw,meta:'농자재 정보 페이지'})).slice(0,limit);
+  return AGRI_LINKS.filter(item=>item.type==='material'&&matchesSearchText(`${item.label} ${item.initial} ${item.text}`,kw)).map(item=>({...item,query:kw,meta:'농자재 정보 페이지'})).slice(0,limit);
+}
+function matchesSearchText(text,kw){const hay=String(text||'').toLowerCase();const compactHay=hay.replace(/\s/g,'');const needle=String(kw||'').toLowerCase();return hay.includes(needle)||compactHay.includes(needle.replace(/\s/g,''))||getInitials(hay).includes(needle)||SEARCH_ALIASES.some(a=>(a.initial===needle||a.label.includes(needle))&&compactHay.includes(a.label.toLowerCase().replace(/\s/g,'')));}
+function getInitials(text){return String(text||'').split('').map(ch=>{const code=ch.charCodeAt(0)-44032;if(code>=0&&code<=11171)return CHO_LIST[Math.floor(code/588)];return ch;}).join('');}
+function isInitialQuery(kw){return /^[ㄱ-ㅎ]+$/.test(kw);}
+function normalizeKeyword(value){return String(value||'').trim().replace(/\s+/g,' ');}
+function highlightText(text,kw){const safe=escHtml(text||'');if(!kw||isInitialQuery(kw))return safe;const escaped=kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return safe.replace(new RegExp(`(${escaped})`,'gi'),'<span class="search-mark">$1</span>');}
+function getRecentSearches(){try{return JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY)||'[]');}catch(e){return [];}}
+function saveRecentSearch(kw){const list=getRecentSearches().filter(item=>item!==kw);list.unshift(kw);localStorage.setItem(SEARCH_STORAGE_KEY,JSON.stringify(list.slice(0,5)));}
+function removeRecentSearch(event,kw){event.stopPropagation();localStorage.setItem(SEARCH_STORAGE_KEY,JSON.stringify(getRecentSearches().filter(item=>item!==kw)));renderSearchDropdown(document.getElementById('globalSearch')?.value||'');}
+function clearRecentSearches(event){event.stopPropagation();localStorage.removeItem(SEARCH_STORAGE_KEY);renderSearchDropdown(document.getElementById('globalSearch')?.value||'');}
+initSearch();
 async function submitPost(){const channelId=document.getElementById('channelSelect').value;const title=document.getElementById('postTitle').value.trim();const content=document.getElementById('postContent').value.trim();if(!channelId||!title){alert('채널과 제목을 입력해주세요.');return;}const {data:{session}}=await _sb.auth.getSession();const {error}=await _sb.from('posts').insert({channel_id:channelId,title,content,user_id:session?.user?.id||null});if(error){alert('등록 실패: '+error.message);return;}closeModal();document.getElementById('postTitle').value='';document.getElementById('postContent').value='';loadFeed();}
 function openModal(){document.getElementById('writeModal').classList.add('open');}
 function closeModal(){document.getElementById('writeModal').classList.remove('open');}
