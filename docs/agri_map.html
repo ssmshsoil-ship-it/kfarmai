@@ -80,7 +80,7 @@
 </div>
 
 <div class="kf-search-bar">
-  <input type="text" id="keyword" placeholder="상호명·주소 검색" onkeypress="if(event.keyCode==13) doSearch()" style="flex:1;min-width:130px;">
+  <input type="text" id="keyword" placeholder="상호명·주소 검색" autocomplete="off" onkeypress="if(event.keyCode==13) doSearch()" style="flex:1;min-width:130px;">
   <button class="kf-btn kf-btn-primary" onclick="doSearch()">검색</button>
   <button class="kf-btn kf-btn-gray" onclick="resetAll()">초기화</button>
 </div>
@@ -186,6 +186,16 @@ let editPwVerified = false;
 
 const REGIONS = ['전체','서울','경기','인천','충남','충북','전남','전북','경남','경북','강원','부산','대구','광주','대전','울산','세종','제주'];
 
+function cleanShopName(name) {
+  const cleaned = String(name || '')
+    .trim()
+    .replace(/^\((주|유|재|사)\)\s*/u, '')
+    .replace(/^\(([^()]+)\)$/u, '$1')
+    .replace(/^\(\s*(?=[가-힣A-Za-z0-9])/u, '')
+    .trim();
+  return cleaned.includes('(') ? cleaned : cleaned.replace(/\s*\)$/u, '').trim();
+}
+
 // 지역 탭 생성
 function buildRegionTabs() {
   const wrap = document.getElementById('regionTabs');
@@ -201,9 +211,14 @@ function buildRegionTabs() {
 // 공공데이터 + 자가등록 통합
 function getAllShops() {
   const pub = (typeof data !== 'undefined' ? data : []).map(d => ({
-    name: d.name, addr: d.addr, tel: d.tel, sido: d.sido, source: 'public', pw: ''
+    name: cleanShopName(d.name), addr: d.addr, tel: d.tel, sido: d.sido, source: 'public', pw: ''
   }));
-  return [...pub, ...userShops];
+  const user = userShops.map((s, idx) => ({
+    ...s,
+    name: cleanShopName(s.name),
+    userIdx: idx
+  }));
+  return [...pub, ...user];
 }
 
 function filterShops() {
@@ -238,7 +253,7 @@ function renderList() {
       lastAlpha = first;
     }
     const isUser = shop.source === 'user';
-    const userIdx = isUser ? userShops.findIndex(s=>s.name===shop.name&&s.addr===shop.addr) : -1;
+    const userIdx = isUser ? shop.userIdx : -1;
     html += `<div class="shop-item">
       <div class="shop-alpha">${first}</div>
       <div style="flex:1;">
@@ -261,7 +276,7 @@ function resetAll() { currentKeyword=''; document.getElementById('keyword').valu
 function openRegModal() { document.getElementById('regModal').classList.add('show'); document.getElementById('regForm').style.display='block'; document.getElementById('regSuccess').style.display='none'; }
 function closeRegModal() { document.getElementById('regModal').classList.remove('show'); }
 function submitReg() {
-  const name = document.getElementById('regName').value.trim();
+  const name = cleanShopName(document.getElementById('regName').value);
   const addr = document.getElementById('regAddr').value.trim();
   const tel = document.getElementById('regTel').value.trim();
   const sido = document.getElementById('regSido').value;
@@ -298,7 +313,7 @@ function verifyPw() {
     document.getElementById('editTel').value = userShops[idx].tel;
     document.getElementById('editBtn').textContent='저장하기';
   } else {
-    userShops[idx].name = document.getElementById('editName').value.trim();
+    userShops[idx].name = cleanShopName(document.getElementById('editName').value);
     userShops[idx].addr = document.getElementById('editAddr').value.trim();
     userShops[idx].tel = document.getElementById('editTel').value.trim();
     localStorage.setItem('kfarmai_shops', JSON.stringify(userShops));
