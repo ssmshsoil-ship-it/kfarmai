@@ -105,11 +105,11 @@
     <h3>🌿 농약사 정보 등록</h3>
     <div id="regForm">
       <label>상호명 *</label>
-      <input type="text" id="regName" placeholder="예) ○○농약사">
+      <input type="text" id="regName" placeholder="예) ○○농약사" autocomplete="off">
       <label>주소 *</label>
-      <input type="text" id="regAddr" placeholder="예) 충남 홍성군 홍성읍 ○○로 123">
+      <input type="text" id="regAddr" placeholder="예) 충남 홍성군 홍성읍 ○○로 123" autocomplete="off">
       <label>전화번호</label>
-      <input type="text" id="regTel" placeholder="예) 041-000-0000">
+      <input type="text" id="regTel" placeholder="예) 041-000-0000" autocomplete="off">
       <label>시도</label>
       <select id="regSido">
         <option value="">선택</option>
@@ -121,7 +121,7 @@
         <option>세종특별자치시</option><option>제주특별자치도</option>
       </select>
       <label>비밀번호 (수정 시 필요) *</label>
-      <input type="password" id="regPw" placeholder="4자리 이상">
+      <input type="password" id="regPw" placeholder="4자리 이상" autocomplete="off">
       <div class="modal-notice">입력하신 정보는 검토 없이 즉시 등록됩니다. 허위 정보 등록 시 삭제될 수 있습니다. 비밀번호는 나중에 정보 수정 시 사용됩니다.</div>
       <div class="modal-btns">
         <button class="modal-btn modal-btn-cancel" onclick="closeRegModal()">취소</button>
@@ -142,14 +142,14 @@
     <h3>✏️ 정보 수정</h3>
     <input type="hidden" id="editIdx">
     <label>비밀번호 확인</label>
-    <input type="password" id="editPw" placeholder="등록 시 입력한 비밀번호">
+    <input type="password" id="editPw" placeholder="등록 시 입력한 비밀번호" autocomplete="off">
     <div id="editFields" style="display:none;">
       <label>상호명</label>
-      <input type="text" id="editName">
+      <input type="text" id="editName" autocomplete="off">
       <label>주소</label>
-      <input type="text" id="editAddr">
+      <input type="text" id="editAddr" autocomplete="off">
       <label>전화번호</label>
-      <input type="text" id="editTel">
+      <input type="text" id="editTel" autocomplete="off">
     </div>
     <div class="modal-btns">
       <button class="modal-btn modal-btn-cancel" onclick="closeEditModal()">취소</button>
