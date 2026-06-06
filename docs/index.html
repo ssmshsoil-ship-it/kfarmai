@@ -650,6 +650,106 @@
       background: var(--brand-soft);
     }
 
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(23, 33, 29, 0.42);
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .write-modal {
+      width: min(100%, 420px);
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 18px 50px rgba(23, 33, 29, 0.2);
+      padding: 18px;
+    }
+
+    .write-modal h2 {
+      font-size: 19px;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #FAFBFA;
+      color: var(--ink);
+      outline: 0;
+      padding: 11px 12px;
+      font-size: 14px;
+    }
+
+    .field textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--brand);
+      background: white;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: white;
+      color: var(--muted);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .modal-actions button {
+      flex: 1;
+    }
+
+    .empty-feed {
+      padding: 24px 16px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+      background: white;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
     @media (min-width: 481px) {
       body {
         background: #F5F5F5;
@@ -696,7 +796,7 @@
             <span class="badge">5개 채널</span>
           </div>
 
-          <a class="hero-card" href="#plant-hospital">
+          <a class="hero-card" href="#write" id="writePostButton">
             <h2>식물 증상, 바로 물어보세요</h2>
             <p>사진과 작물명을 올리면 커뮤니티와 AI 진단 흐름으로 이어집니다.</p>
             <span class="hero-action">질문 올리기</span>
@@ -739,21 +839,10 @@
           <section class="section">
             <div class="section-title">
               <strong>최근 질문</strong>
-              <span>샘플 피드</span>
+              <span>실시간</span>
             </div>
-            <div class="feed-list">
-              <article class="feed-card">
-                <div class="feed-top"><span class="badge">식물 병원</span><span class="time">방금 전</span></div>
-                <h3>토마토 잎 끝이 노랗게 마르는데 물 문제일까요?</h3>
-                <p>아침마다 물을 주는데 새잎보다 아래쪽 잎부터 변색됩니다.</p>
-                <div class="feed-meta"><span>댓글 3</span><span>조회 18</span></div>
-              </article>
-              <article class="feed-card">
-                <div class="feed-top"><span class="badge">작물 상담방</span><span class="time">12분 전</span></div>
-                <h3>고추 정식 후 활착이 늦을 때 확인할 항목이 궁금합니다.</h3>
-                <p>멀칭 후 5일째인데 일부 포기가 축 처져 있습니다.</p>
-                <div class="feed-meta"><span>댓글 5</span><span>조회 42</span></div>
-              </article>
+            <div class="feed-list" id="recentPosts">
+              <div class="empty-feed">최근 질문을 불러오는 중입니다</div>
             </div>
           </section>
         </section>
@@ -914,15 +1003,153 @@
         <span>MY</span>
       </button>
     </nav>
+
+    <div class="modal-backdrop" id="writeModal" aria-hidden="true">
+      <form class="write-modal" id="writePostForm">
+        <h2>질문 글쓰기</h2>
+        <div class="field">
+          <label for="postChannel">채널</label>
+          <select id="postChannel" required>
+            <option value="">채널을 불러오는 중입니다</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="postTitle">제목</label>
+          <input id="postTitle" type="text" maxlength="80" placeholder="궁금한 내용을 짧게 적어주세요" required>
+        </div>
+        <div class="field">
+          <label for="postContent">내용</label>
+          <textarea id="postContent" maxlength="1200" placeholder="작물명, 증상, 재배 환경을 적어주세요"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="secondary-btn" type="button" id="cancelWrite">취소</button>
+          <button class="primary-btn" type="submit" id="submitWrite">확인</button>
+        </div>
+      </form>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const pager = document.getElementById('pager');
     const dots = Array.from(document.querySelectorAll('.dot'));
     const tabs = Array.from(document.querySelectorAll('.tab'));
     const cropChips = document.getElementById('cropChips');
+    const recentPosts = document.getElementById('recentPosts');
+    const writePostButton = document.getElementById('writePostButton');
+    const writeModal = document.getElementById('writeModal');
+    const writePostForm = document.getElementById('writePostForm');
+    const postChannel = document.getElementById('postChannel');
+    const postTitle = document.getElementById('postTitle');
+    const postContent = document.getElementById('postContent');
+    const submitWrite = document.getElementById('submitWrite');
+    const cancelWrite = document.getElementById('cancelWrite');
+    const SUPABASE_URL = 'https://xzetqijeucldbfgjuoes.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6ZXRxaWpldWNsZGJmZ2p1b2VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjIwODYsImV4cCI6MjA5NTEzODA4Nn0.QAizDLXQC1DrRi5C0sPahK6s_-6X4zkTEjzJZ6CFprw';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let channels = [];
+    let channelNameById = {};
     let activePage = 0;
     let activeTab = tabs[0];
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatPostTime(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+      const diff = Date.now() - date.getTime();
+      const minute = 60 * 1000;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+      if (diff < minute) return '방금 전';
+      if (diff < hour) return `${Math.floor(diff / minute)}분 전`;
+      if (diff < day) return `${Math.floor(diff / hour)}시간 전`;
+      return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    }
+
+    function setFeedMessage(message) {
+      recentPosts.innerHTML = `<div class="empty-feed">${escapeHtml(message)}</div>`;
+    }
+
+    async function loadChannels() {
+      const { data, error } = await supabaseClient
+        .from('channels')
+        .select('id, slug, name, target_type')
+        .order('name', { ascending: true });
+
+      if (error) {
+        postChannel.innerHTML = '<option value="">채널을 불러오지 못했습니다</option>';
+        throw error;
+      }
+
+      channels = data || [];
+      channelNameById = channels.reduce((acc, channel) => {
+        acc[channel.id] = channel.name;
+        return acc;
+      }, {});
+
+      if (!channels.length) {
+        postChannel.innerHTML = '<option value="">등록된 채널이 없습니다</option>';
+        return;
+      }
+
+      postChannel.innerHTML = channels
+        .map((channel) => `<option value="${channel.id}">${escapeHtml(channel.name)}</option>`)
+        .join('');
+    }
+
+    async function loadRecentPosts() {
+      setFeedMessage('최근 질문을 불러오는 중입니다');
+
+      const { data, error } = await supabaseClient
+        .from('posts')
+        .select('id, title, content, channel_id, created_at')
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) {
+        setFeedMessage('최근 질문을 불러오지 못했습니다');
+        return;
+      }
+
+      if (!data || !data.length) {
+        setFeedMessage('아직 질문이 없습니다');
+        return;
+      }
+
+      recentPosts.innerHTML = data.map((post) => {
+        const channelName = channelNameById[post.channel_id] || '커뮤니티';
+        return `
+          <article class="feed-card">
+            <div class="feed-top">
+              <span class="badge">${escapeHtml(channelName)}</span>
+              <span class="time">${escapeHtml(formatPostTime(post.created_at))}</span>
+            </div>
+            <h3>${escapeHtml(post.title)}</h3>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openWriteModal() {
+      writeModal.classList.add('show');
+      writeModal.setAttribute('aria-hidden', 'false');
+      window.setTimeout(() => postTitle.focus(), 0);
+    }
+
+    function closeWriteModal() {
+      writeModal.classList.remove('show');
+      writeModal.setAttribute('aria-hidden', 'true');
+      writePostForm.reset();
+      if (channels[0]) postChannel.value = channels[0].id;
+    }
 
     function getDefaultTabForPage(pageIndex) {
       return tabs.find((tab) => Number(tab.dataset.page) === pageIndex && tab.dataset.primary === 'true')
@@ -956,6 +1183,49 @@
       });
     });
 
+    writePostButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      openWriteModal();
+    });
+
+    cancelWrite.addEventListener('click', closeWriteModal);
+
+    writeModal.addEventListener('click', (event) => {
+      if (event.target === writeModal) closeWriteModal();
+    });
+
+    writePostForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = postTitle.value.trim();
+      const content = postContent.value.trim();
+      const channelId = postChannel.value;
+
+      if (!title || !channelId) return;
+
+      submitWrite.disabled = true;
+      submitWrite.textContent = '등록 중';
+
+      const { error } = await supabaseClient
+        .from('posts')
+        .insert({
+          title,
+          content,
+          channel_id: channelId,
+          user_id: null
+        });
+
+      submitWrite.disabled = false;
+      submitWrite.textContent = '확인';
+
+      if (error) {
+        alert(`글 등록에 실패했습니다: ${error.message}`);
+        return;
+      }
+
+      closeWriteModal();
+      await loadRecentPosts();
+    });
+
     pager.addEventListener('scroll', () => {
       window.clearTimeout(pager._scrollTimer);
       pager._scrollTimer = window.setTimeout(() => {
@@ -974,6 +1244,18 @@
       cropChips.querySelectorAll('.chip').forEach((item) => item.classList.remove('active'));
       chip.classList.add('active');
     });
+
+    async function initCommunity() {
+      try {
+        await loadChannels();
+      } catch (error) {
+        setFeedMessage('채널 정보를 불러오지 못했습니다');
+        return;
+      }
+      await loadRecentPosts();
+    }
+
+    initCommunity();
   </script>
 </body>
 </html>
