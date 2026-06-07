@@ -1,47 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>kFarmAI - 농업·식물 AI 진단 커뮤니티</title>
-<meta name="description" content="식물 이상 증상, 병해충, 상토·종자·비료·작물보호제 정보를 검색하고 질문하는 농업·식물 AI 커뮤니티입니다.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://kfarmai.com/">
-
-<meta property="og:locale" content="ko_KR">
-<meta property="og:site_name" content="kFarmAI">
-<meta property="og:type" content="website">
-<meta property="og:title" content="kFarmAI - 농업·식물 AI 진단 커뮤니티">
-<meta property="og:description" content="식물 이상 증상, 병해충, 농자재 정보를 검색하고 질문하는 농업·식물 AI 커뮤니티입니다.">
-<meta property="og:url" content="https://kfarmai.com/">
-<meta property="og:image" content="https://kfarmai.com/logo.png">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="kFarmAI - 농업·식물 AI 진단 커뮤니티">
-<meta name="twitter:description" content="식물 이상 증상, 병해충, 농자재 정보를 검색하고 질문하는 농업·식물 AI 커뮤니티입니다.">
-<meta name="twitter:image" content="https://kfarmai.com/logo.png">
-
-<meta name="theme-color" content="#16a34a">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "kFarmAI",
-  "alternateName": "케이팜AI",
-  "url": "https://kfarmai.com/",
-  "description": "농업·식물 AI 진단과 커뮤니티 기반 정보 플랫폼"
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "kFarmAI",
-  "url": "https://kfarmai.com/",
-  "logo": "https://kfarmai.com/logo.png"
-}
-</script>
+<title>kFarmAI - 농업 AI 커뮤니티</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   :root {
@@ -63,6 +25,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", "Pretendard", sans-serif;
     background: #0a0a0a;
     color: var(--text);
+    overscroll-behavior: none;
     -webkit-font-smoothing: antialiased;
   }
   body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -90,21 +53,6 @@
     display: flex; align-items: center; justify-content: space-between;
     padding-bottom: 8px;
   }
-  .header-actions { display: flex; align-items: center; gap: 8px; }
-  .lang-toggle {
-    border: 1px solid var(--border);
-    background: #fff;
-    border-radius: 999px;
-    padding: 6px 9px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #A1A7AE;
-    cursor: pointer;
-    line-height: 1;
-    box-shadow: 0 1px 4px rgba(0,0,0,.04);
-  }
-  .lang-toggle .active { color: var(--green); }
-  .lang-toggle .divider { color: #D1D5DB; margin: 0 4px; }
   .brand { display: flex; align-items: center; gap: 8px; }
   .brand img {
     width: 36px; height: 36px; object-fit: contain;
@@ -123,67 +71,23 @@
     display: flex; align-items: center; gap: 8px;
     background: #F3F4F6; border-radius: 12px;
     padding: 10px 12px; margin: 4px 0 8px;
-    position: relative;
   }
-  .search-btn {
-    width: 24px; height: 24px; border: 0; background: transparent;
-    display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
-  }
-  .search-btn svg { width: 18px; height: 18px; color: #1D9E75; }
+  .search svg { width: 18px; height: 18px; color: #1D9E75; flex-shrink: 0; }
   .search input {
     flex: 1; border: none; background: transparent; outline: none;
     font-size: 13px; color: #111;
   }
   .search input::placeholder { color: #9CA3AF; }
-  .search-dd {
-    position: absolute; top: calc(100% + 6px); left: 0; right: 0;
-    background: #fff; border: 1px solid var(--border); border-radius: 14px;
-    box-shadow: 0 14px 36px rgba(0,0,0,.14); z-index: 30;
-    padding: 10px; display: none; max-height: 430px; overflow-y: auto;
-  }
-  .search-dd.open { display: block; }
-  .s-section { padding: 4px 0 8px; }
-  .s-section + .s-section { border-top: 1px solid var(--border); }
-  .s-head { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 900; color: var(--muted); padding: 5px 4px; }
-  .s-clear { border: 0; background: transparent; color: var(--green); font-size: 11px; font-weight: 800; cursor: pointer; }
-  .s-item {
-    display: flex; align-items: center; gap: 9px; padding: 9px 6px;
-    border-radius: 10px; cursor: pointer; color: inherit; text-decoration: none;
-  }
-  .s-item:hover { background: #F7F8FA; }
-  .s-ico { width: 24px; height: 24px; border-radius: 8px; background: var(--green-soft); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
-  .s-main { flex: 1; min-width: 0; }
-  .s-title { font-size: 13px; font-weight: 800; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .s-meta { margin-top: 3px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-  .s-x { border: 0; background: transparent; color: #A1A7AE; font-size: 16px; cursor: pointer; padding: 4px; }
-  .search-mark { color: var(--green); font-weight: 900; background: transparent; }
-  .search-result-head {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #fff; border: 1px solid var(--border); border-radius: 12px;
-    padding: 11px 12px; margin-bottom: 8px; font-size: 13px; font-weight: 900;
-  }
-  .search-close { width: 28px; height: 28px; border: 0; border-radius: 50%; background: #F3F4F6; color: #555; font-size: 17px; cursor: pointer; }
-  .search-group-title { font-size: 12px; font-weight: 900; color: var(--sub); margin: 12px 4px 8px; }
   .bell {
     position: relative; width: 30px; height: 30px;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
-    border-radius: 50%;
-    overflow: hidden;
   }
   .bell svg { width: 22px; height: 22px; color: #333; }
-  .bell img { width: 100%; height: 100%; object-fit: cover; }
-  .bell .profile-initial {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: var(--green-soft); color: var(--green);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 900;
-  }
   .bell::after {
     content: ''; position: absolute; top: 3px; right: 3px;
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--orange); border: 1.5px solid #fff;
   }
-  .bell.logged-in::after { display: none; }
 
   /* Tabs - centered pill */
   .tabs {
@@ -214,10 +118,7 @@
     flex: 0 0 100%;
     height: 100%;
     overflow-y: auto;
-    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    touch-action: pan-y;
     padding: 12px 14px 100px;
   }
   .pages.dragging { transition: none; }
@@ -345,7 +246,6 @@
     font-size: 13.5px; font-weight: 700;
     box-shadow: 0 8px 20px rgba(0,0,0,.28);
     border: 0; cursor: pointer; z-index: 5;
-    transition: opacity 0.2s ease;
   }
 
   /* ===== AI Diagnosis ===== */
@@ -415,25 +315,6 @@
   .case-pct .num.danger { color: #DC2626; }
   .case-pct .lbl { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
-  /* ===== Page 2: 진단 입력/결과 ===== */
-  .diag-preview-wrap { margin-top: 12px; display: none; }
-  .diag-preview-wrap.show { display: block; }
-  .diag-preview-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 12px; }
-  .diag-preview-clear { display: block; width: 100%; margin-top: 6px; background: none; border: none; color: var(--sub); font-size: 12px; cursor: pointer; text-align: center; padding: 0; }
-  .symptom-area { margin-top: 14px; }
-  .symptom-textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 12px; font-size: 14px; font-family: inherit; min-height: 76px; resize: vertical; outline: none; background: #fff; color: var(--text); box-sizing: border-box; }
-  .symptom-textarea:focus { border-color: var(--green); }
-  .diag-start-btn { width: 100%; height: 50px; border: 0; border-radius: 14px; background: var(--green); color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; margin-top: 12px; opacity: .4; transition: opacity .2s; }
-  .diag-start-btn:not([disabled]) { opacity: 1; }
-  .diag-result-wrap { margin-top: 4px; }
-  .diag-loading { text-align: center; padding: 24px 0; display: none; }
-  .diag-loading.show { display: block; }
-  .diag-result-card { background: #fff; border-radius: 14px; padding: 14px; border: 1px solid var(--border); margin-bottom: 8px; }
-  .diag-rc-title { font-size: 10.5px; font-weight: 900; color: var(--green); letter-spacing: .4px; margin-bottom: 5px; }
-  .diag-rc-body { font-size: 13.5px; line-height: 1.65; color: var(--text); }
-  .diag-disclaimer { font-size: 11.5px; color: #8a5c00; line-height: 1.6; margin: 8px 0 4px; padding: 10px 12px; background: #FFF8F0; border-radius: 10px; border-left: 3px solid var(--orange); }
-  .diag-map-btn { width: 100%; height: 46px; border: 1.5px solid var(--green); border-radius: 13px; background: #fff; color: var(--green); font-size: 14px; font-weight: 900; cursor: pointer; margin-top: 4px; margin-bottom: 16px; }
-
   /* ===== Page 3 ===== */
   .page3-title { margin: 4px 2px 12px; }
   .page3-title h2 { font-size: 19px; font-weight: 800; letter-spacing: -0.4px; }
@@ -501,7 +382,6 @@
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
     font-size: 10.5px; font-weight: 700; color: var(--muted); cursor: pointer;
   }
-  .bnav a.b { text-decoration: none; }
   .bnav .b svg { width: 24px; height: 24px; }
   .bnav .b.on { color: var(--green); }
 
@@ -514,99 +394,6 @@
     z-index: 20; white-space: nowrap;
   }
   .toast.show { opacity: 1; }
-  a.stat-card, a.ql {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-  }
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.5);
-    z-index: 50;
-    align-items: flex-end;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 20px 20px 0 0;
-    padding: 20px 16px 32px;
-  }
-  .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
-  .modal-title { font-size: 17px; font-weight: 800; margin-bottom: 16px; color: var(--text); }
-  .modal-field { margin-bottom: 12px; }
-  .modal-label { font-size: 13px; font-weight: 700; color: var(--sub); margin-bottom: 6px; }
-  .modal-select, .modal-input, .modal-textarea {
-    width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px;
-    font-size: 14px; font-family: inherit; outline: none; background: #fff; color: var(--text);
-  }
-  .modal-select:focus, .modal-input:focus, .modal-textarea:focus { border-color: var(--green); }
-  .modal-textarea { height: 90px; resize: none; }
-  .modal-submit {
-    width: 100%; padding: 14px; background: var(--green); color: #fff; border: 0; border-radius: 12px;
-    font-size: 15px; font-weight: 800; cursor: pointer;
-  }
-  .my-panel-overlay {
-    display: flex; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 60;
-    align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .22s ease;
-  }
-  .my-panel-overlay.open { opacity: 1; pointer-events: auto; }
-  .my-panel {
-    width: 100%; max-width: 480px; max-height: 86vh; overflow-y: auto;
-    margin: 0 auto; background: #fff; border-radius: 22px 22px 0 0;
-    padding: 12px 18px 26px;
-    transform: translateY(100%); transition: transform .28s cubic-bezier(.32,.72,.36,1);
-  }
-  .my-panel-overlay.open .my-panel { transform: translateY(0); }
-  .my-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .my-title { font-size: 18px; font-weight: 900; letter-spacing: -0.4px; }
-  .my-close {
-    width: 34px; height: 34px; border: 0; border-radius: 50%;
-    background: #F3F4F6; color: #4B5563; font-size: 20px; cursor: pointer;
-  }
-  .login-sub { font-size: 13px; color: var(--sub); margin: 6px 0 20px; line-height: 1.45; }
-  .login-sub strong { display: block; color: var(--text); font-size: 18px; margin-bottom: 6px; }
-  .btn-google, .btn-kakao { width: 100%; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; }
-  .btn-google {
-    padding: 13px; border: 1.5px solid var(--border); background: #fff; display: flex; align-items: center;
-    justify-content: center; gap: 10px; color: var(--text);
-  }
-  .btn-kakao {
-    margin-top: 10px; padding: 13px; border: 0; background: #F3F4F6; color: #9CA3AF;
-  }
-  .my-profile { display: flex; align-items: center; gap: 12px; padding: 8px 0 18px; }
-  .my-avatar {
-    width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
-    background: var(--green-soft); color: var(--green);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: 900; flex-shrink: 0;
-  }
-  .my-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .my-name { font-size: 17px; font-weight: 900; color: var(--text); }
-  .my-email { margin-top: 3px; font-size: 12px; color: var(--sub); word-break: break-all; }
-  .role-badge {
-    display: inline-flex; margin-top: 7px; padding: 4px 9px;
-    border-radius: 999px; background: var(--green-soft); color: var(--green);
-    font-size: 11px; font-weight: 800;
-  }
-  .my-menu { border-top: 1px solid var(--border); }
-  .my-row {
-    min-height: 48px; display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 700; color: #222;
-  }
-  .my-row .count, .my-row .muted { color: var(--muted); font-size: 12px; font-weight: 700; }
-  .my-row.logout { color: #DC2626; cursor: pointer; }
-  .my-version { padding-top: 14px; color: var(--muted); font-size: 12px; text-align: center; font-weight: 700; }
-  .feed-loading { text-align: center; padding: 20px 10px; color: var(--muted); font-size: 13px; }
-  .spinner {
-    width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--green);
-    border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 8px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -843,12 +630,6 @@
       <line x1="26" y1="25" x2="34" y2="25" stroke="#7C3AED" stroke-width="1.5"/>
       <line x1="26" y1="30" x2="32" y2="30" stroke="#7C3AED" stroke-width="1.5"/>
     </symbol>
-    <symbol id="ql-link" viewBox="0 0 48 48">
-      <rect width="48" height="48" rx="14" fill="#F5F5F5"/>
-      <path d="M20 28 l-2 2 a6 6 0 0 1-8.5-8.5 l5-5 a6 6 0 0 1 8.5 0" stroke="#666" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M28 20 l2-2 a6 6 0 0 1 8.5 8.5 l-5 5 a6 6 0 0 1-8.5 0" stroke="#666" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M19 29 l10-10" stroke="#666" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    </symbol>
 
     <!-- BOTTOM NAV ICONS -->
     <symbol id="nav-home" viewBox="0 0 24 24">
@@ -890,24 +671,18 @@
           <div class="brand-sub">AI FARM COMMUNITY</div>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="lang-toggle" id="langToggle" type="button" onclick="toggleLanguage()"><span class="kr active">KR</span><span class="divider">|</span><span class="en">EN</span></button>
-        <div class="bell" id="headerProfile" onclick="openMyPanel()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-        </div>
+      <div class="bell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
       </div>
     </div>
-    <form class="search" id="searchBox" onsubmit="event.preventDefault(); runSearch();">
-      <button class="search-btn" type="button" onclick="runSearch()" aria-label="검색">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </button>
-      <input type="search" id="globalSearch" placeholder="작물 증상, 농약사, 농자재를 검색하세요" data-i18n-placeholder="searchPlaceholder" enterkeyhint="search" autocomplete="off" />
-      <div class="search-dd" id="searchDropdown"></div>
-    </form>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" placeholder="작물 증상, 질문, 농자재를 검색하세요" />
+    </div>
     <div class="tabs">
-      <div class="tab active" data-i="0" data-i18n="community">커뮤니티</div>
-      <div class="tab" data-i="1" data-i18n="diagnosis">AI 진단</div>
-      <div class="tab" data-i="2" data-i18n="agriData">농자재</div>
+      <div class="tab active" data-i="0">커뮤니티</div>
+      <div class="tab" data-i="1">AI 진단</div>
+      <div class="tab" data-i="2">농자재</div>
     </div>
   </header>
 
@@ -922,30 +697,54 @@
           <div class="hero-content">
             <span class="badge-orange">★ AI 식물 주치의</span>
             <div>
-              <div class="hero-title" data-i18n="heroTitle">이상하다 싶을 때,<br/>바로 여기</div>
+              <div class="hero-title">이상하다 싶을 때,<br/>바로 여기</div>
               <div class="hero-sub">사진 한 장이면 AI가 진단해드려요</div>
             </div>
           </div>
         </div>
 
         <div class="section-head">
-          <div class="section-title" data-i18n="exploreChannels">채널 둘러보기</div>
-          <div class="section-more" onclick="location.href='channel.html'">전체보기</div>
+          <div class="section-title">채널 둘러보기</div>
+          <div class="section-more">전체보기</div>
         </div>
-        <div class="channels" id="channelGrid">
-          <div class="feed-loading"><div class="spinner"></div>불러오는 중...</div>
+        <div class="channels">
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-hospital"/></svg></div><div class="ch-name">식물 병원</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-chat"/></svg></div><div class="ch-name">식물 질문방</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-wheat"/></svg></div><div class="ch-name">작물 상담방</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-camera"/></svg></div><div class="ch-name">내 식물 자랑</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-house"/></svg></div><div class="ch-name">농부 사랑방</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-pot"/></svg></div><div class="ch-name">나눔·직거래</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-class"/></svg></div><div class="ch-name">원예 클래스</div></div>
+          <div class="channel"><div class="ch-icon-wrap"><svg><use href="#ic-people"/></svg></div><div class="ch-name">식집사 모임</div></div>
         </div>
 
         <div class="section-head">
           <div style="display:flex;align-items:center">
-            <div class="section-title" data-i18n="recentQuestions">방금 올라온 질문</div>
+            <div class="section-title">방금 올라온 질문</div>
             <span class="live-dot">실시간</span>
           </div>
           <div class="section-more">더보기</div>
         </div>
 
-        <div id="recentFeed">
-          <div class="feed-loading"><div class="spinner"></div>불러오는 중...</div>
+        <div class="q-card">
+          <span class="ch-badge green">식물 병원</span>
+          <div class="q-title">토마토 잎에 노란 반점이 생겼어요. 무슨 병일까요?</div>
+          <div class="q-meta"><span>초보농부</span><span>♡ 12</span><span>3분 전</span></div>
+        </div>
+        <div class="q-card">
+          <span class="ch-badge orange">작물 상담방</span>
+          <div class="q-title">고추 모종 옮겨심기 좋은 시기가 언제인가요?</div>
+          <div class="q-meta"><span>고추왕</span><span>♡ 8</span><span>11분 전</span></div>
+        </div>
+        <div class="q-card">
+          <span class="ch-badge blue">식물 질문방</span>
+          <div class="q-title">상추가 자꾸 웃자라는데 비료 양 조절 어떻게 하나요?</div>
+          <div class="q-meta"><span>주말농부</span><span>♡ 5</span><span>18분 전</span></div>
+        </div>
+        <div class="q-card">
+          <span class="ch-badge teal">나눔·직거래</span>
+          <div class="q-title">집에서 키운 방울토마토 모종 나눔합니다 🍅</div>
+          <div class="q-meta"><span>도시농부</span><span>♡ 23</span><span>32분 전</span></div>
         </div>
       </section>
 
@@ -961,15 +760,9 @@
           <div class="label">진단할 사진을 올려주세요</div>
           <div class="sub">잎·줄기·열매가 잘 보이게 촬영하세요</div>
           <div class="upload-buttons">
-            <button class="ub primary" onclick="diagOpenCamera()">📷 촬영하기</button>
-            <button class="ub outline" onclick="diagOpenAlbum()">🖼 앨범에서</button>
+            <button class="ub primary" onclick="showToast('카메라가 열렸습니다 📷')">📷 촬영하기</button>
+            <button class="ub outline" onclick="showToast('앨범에서 선택')">🖼 앨범에서</button>
           </div>
-          <div class="diag-preview-wrap" id="diagPreviewWrap">
-            <img id="diagPreviewImg" class="diag-preview-img" src="" alt="업로드 이미지">
-            <button class="diag-preview-clear" onclick="diagClearImage()">✕ 이미지 제거</button>
-          </div>
-          <input type="file" id="diagCameraInput" accept="image/*" capture="environment" style="display:none" onchange="diagHandleFile(this)">
-          <input type="file" id="diagAlbumInput" accept="image/*" style="display:none" onchange="diagHandleFile(this)">
         </div>
 
         <div class="section-head" style="margin-top:6px"><div class="section-title">작물 선택</div></div>
@@ -984,13 +777,6 @@
           <div class="crop">포도</div>
           <div class="crop">사과</div>
         </div>
-
-        <div class="symptom-area">
-          <textarea class="symptom-textarea" id="diagSymptom" placeholder="증상을 설명해주세요. 예) 잎이 노랗게 변했어요" oninput="updateDiagBtn()"></textarea>
-        </div>
-        <button class="diag-start-btn" id="diagStartBtn" disabled onclick="runDiagnosis()">🔍 AI 진단 시작</button>
-        <div class="diag-loading" id="diagLoading"><div class="spinner"></div><div style="margin-top:8px;font-size:13px;color:var(--sub)">AI가 분석 중입니다...</div></div>
-        <div class="diag-result-wrap" id="diagResultWrap"></div>
 
         <div class="section-head">
           <div class="section-title">★ 최근 진단 사례</div>
@@ -1051,21 +837,20 @@
         </div>
 
         <div class="stat-row">
-          <a class="stat-card" href="santo.html"><div class="stat-ic"><svg><use href="#st-soil"/></svg></div><div class="stat-name">상토</div></a>
-          <a class="stat-card" href="seed.html"><div class="stat-ic"><svg><use href="#st-seed"/></svg></div><div class="stat-name">종자</div></a>
-          <a class="stat-card" href="cpa.html"><div class="stat-ic"><svg><use href="#st-chem"/></svg></div><div class="stat-name">작물보호제</div></a>
-          <a class="stat-card" href="fert.html"><div class="stat-ic"><svg><use href="#st-fert"/></svg></div><div class="stat-name">비료</div></a>
+          <div class="stat-card"><div class="stat-ic"><svg><use href="#st-soil"/></svg></div><div class="stat-name">상토</div></div>
+          <div class="stat-card"><div class="stat-ic"><svg><use href="#st-seed"/></svg></div><div class="stat-name">종자</div></div>
+          <div class="stat-card"><div class="stat-ic"><svg><use href="#st-chem"/></svg></div><div class="stat-name">작물보호제</div></div>
+          <div class="stat-card"><div class="stat-ic"><svg><use href="#st-fert"/></svg></div><div class="stat-name">비료</div></div>
         </div>
 
-        <div class="section-head" style="margin-top:4px"><div class="section-title">바로가기</div></div>
+        <div class="section-head" style="margin-top:4px"><div class="section-title">빠른 메뉴</div></div>
         <div class="ql-grid">
-          <a class="ql" href="agri_map.html"><div class="ql-icon"><svg><use href="#ql-map"/></svg></div><div class="ql-name">주변 농약방</div></a>
-          <div class="ql"><div class="ql-icon"><svg><use href="#ql-price"/></svg></div><div class="ql-name">농산물 시세</div></div>
           <div class="ql"><div class="ql-icon"><svg><use href="#ql-weather"/></svg></div><div class="ql-name">농업 날씨</div></div>
+          <div class="ql"><div class="ql-icon"><svg><use href="#ql-price"/></svg></div><div class="ql-name">농산물 시세</div></div>
+          <div class="ql"><div class="ql-icon"><svg><use href="#ql-gov"/></svg></div><div class="ql-name">정부 지원금</div></div>
           <div class="ql"><div class="ql-icon"><svg><use href="#ql-cal"/></svg></div><div class="ql-name">재배 달력</div></div>
+          <div class="ql"><div class="ql-icon"><svg><use href="#ql-map"/></svg></div><div class="ql-name">주변 농약방</div></div>
           <div class="ql"><div class="ql-icon"><svg><use href="#ql-book"/></svg></div><div class="ql-name">재배 가이드</div></div>
-          <a class="ql" href="news_sub.html"><div class="ql-icon"><svg><use href="#ql-gov"/></svg></div><div class="ql-name">보조사업</div></a>
-          <a class="ql" href="links.html"><div class="ql-icon"><svg><use href="#ql-link"/></svg></div><div class="ql-name">농업링크</div></a>
         </div>
 
         <div class="promo-banner" onclick="showToast('우리 동네 시세를 확인합니다')">
@@ -1086,7 +871,7 @@
       <div class="pdot"></div>
     </div>
 
-    <button class="fab" onclick="openModal()">
+    <button class="fab" onclick="showToast('새 질문을 작성해보세요')">
       <span style="font-size:17px;line-height:1">＋</span>
       <span>질문하기</span>
     </button>
@@ -1097,73 +882,13 @@
   <!-- Bottom Nav (fixed) -->
   <nav class="bnav">
     <div class="b on"><svg><use href="#nav-home"/></svg><span>홈</span></div>
-    <a class="b" href="channel.html"><svg><use href="#nav-q"/></svg><span data-i18n="qa">질문</span></a>
-    <div class="b"><svg><use href="#nav-d"/></svg><span data-i18n="diagnosisShort">진단</span></div>
-    <a class="b" href="agri_map.html"><svg><use href="#nav-pin"/></svg><span data-i18n="nearby">주변</span></a>
-    <div class="b" onclick="openMyPanel()"><svg><use href="#nav-my"/></svg><span>MY</span></div>
+    <div class="b"><svg><use href="#nav-q"/></svg><span>질문</span></div>
+    <div class="b"><svg><use href="#nav-d"/></svg><span>진단</span></div>
+    <div class="b"><svg><use href="#nav-pin"/></svg><span>주변</span></div>
+    <div class="b"><svg><use href="#nav-my"/></svg><span>MY</span></div>
   </nav>
 </div>
 
-<!-- WRITE MODAL -->
-<div class="modal-overlay" id="writeModal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">커뮤니티에 질문하기</div>
-    <div class="modal-field"><div class="modal-label">채널 선택</div><select class="modal-select" id="channelSelect"><option value="">채널을 선택하세요</option></select></div>
-    <div class="modal-field"><div class="modal-label">제목</div><input class="modal-input" id="postTitle" placeholder="어떤 증상인가요? 예) 잎이 노랗게 변했어요" autocomplete="off"></div>
-    <div class="modal-field"><div class="modal-label">내용</div><textarea class="modal-textarea" id="postContent" placeholder="작물명, 재배환경, 증상을 자세히 적어주세요"></textarea></div>
-    <button class="modal-submit" onclick="submitPost()">질문 등록하기</button>
-  </div>
-</div>
-
-<!-- MY PANEL -->
-<div class="my-panel-overlay" id="myPanel" onclick="if(event.target===this)closeMyPanel()">
-  <div class="my-panel">
-    <div class="modal-handle"></div>
-    <div class="my-head">
-      <div class="my-title">MY</div>
-      <button class="my-close" type="button" onclick="closeMyPanel()">×</button>
-    </div>
-
-    <div id="myLoggedOut">
-      <div class="login-sub">
-        <strong>로그인하고 더 많은 기능을 이용하세요</strong>
-        질문 등록, 진단 기록, 내 식물 관리
-      </div>
-      <button class="btn-google" id="googleBtn" onclick="loginGoogle()">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-        Google로 시작하기
-      </button>
-      <button class="btn-kakao" type="button" disabled>카카오로 시작하기 (준비중)</button>
-    </div>
-
-    <div id="myLoggedIn" style="display:none">
-      <div class="my-profile">
-        <div class="my-avatar" id="myAvatar">U</div>
-        <div>
-          <div class="my-name" id="myName">사용자</div>
-          <div class="my-email" id="myEmail">user@example.com</div>
-          <span class="role-badge">일반회원</span>
-        </div>
-      </div>
-      <div class="my-menu">
-        <div class="my-row"><span>내가 쓴 글</span><span class="count" id="myPostCount">0</span></div>
-        <div class="my-row"><span>내 진단 기록</span><span class="count" id="myDiagnosisCount">0</span></div>
-        <div class="my-row"><span>저장한 정보</span><span class="muted">준비중</span></div>
-        <div class="my-row"><span>언어 설정</span><button class="lang-toggle" type="button" onclick="toggleLanguage()"><span class="kr active">KR</span><span class="divider">|</span><span class="en">EN</span></button></div>
-        <div class="my-row"><span>공지사항</span><span class="muted">준비중</span></div>
-        <div class="my-row"><span>문의하기</span><span class="muted">준비중</span></div>
-        <div class="my-row logout" onclick="logout()">로그아웃</div>
-      </div>
-      <div class="my-version">앱 버전: v2.0</div>
-    </div>
-  </div>
-</div>
-<script src="static/pesticide_data.js"></script>
-<script src="static/santo_data.js"></script>
-<script src="static/seed_data.js"></script>
-<script src="static/cpa_data.js"></script>
-<script src="static/fert_data.js"></script>
 <script>
 (function(){
   const pages = document.getElementById('pages');
@@ -1175,18 +900,15 @@
   const total = 3;
   const MIN_SWIPE = 60;
 
-  function go(i, resetScroll = false){
+  function go(i){
     current = Math.max(0, Math.min(total-1, i));
     pages.style.transform = `translateX(-${current * 100}%)`;
     tabs.forEach((t,k)=>t.classList.toggle('active', k===current));
     pdots.forEach((d,k)=>d.classList.toggle('on', k===current));
     const cur = pages.children[current];
-    if(resetScroll && cur) cur.scrollTop = 0;
-    const fab = document.querySelector('.fab');
-    if(fab){ fab.style.opacity = current === 0 ? '1' : '0'; fab.style.pointerEvents = current === 0 ? '' : 'none'; }
+    if(cur) cur.scrollTop = 0;
   }
-  window.goMainPage = () => go(0);
-  tabs.forEach(t => t.addEventListener('click', () => go(parseInt(t.dataset.i), true)));
+  tabs.forEach(t => t.addEventListener('click', () => go(parseInt(t.dataset.i))));
 
   // Touch swipe
   let startX = 0, startY = 0, dx = 0, dragging = false, axis = null;
@@ -1198,34 +920,21 @@
     if(!dragging) return;
     const cx = e.touches[0].clientX - startX;
     const cy = e.touches[0].clientY - startY;
-    const absX = Math.abs(cx);
-    const absY = Math.abs(cy);
-    if(!axis && (absX > 8 || absY > 8)){
-      if(absY > absX){
-        axis = 'y';
-        dragging = false;
-        dx = 0;
-        pages.classList.remove('dragging');
-        return;
-      }
-      axis = 'x';
-    }
+    if(!axis && (Math.abs(cx) > 8 || Math.abs(cy) > 8)) axis = Math.abs(cx) > Math.abs(cy) ? 'x' : 'y';
     if(axis === 'x'){
-      e.preventDefault();
       dx = cx;
       pages.classList.add('dragging');
       const w = wrap.clientWidth;
       pages.style.transform = `translateX(${-current * 100 + (dx / w) * 100}%)`;
     }
-  }, {passive:false});
+  }, {passive:true});
   wrap.addEventListener('touchend', () => {
     if(!dragging) return;
     dragging = false;
     pages.classList.remove('dragging');
-    if(axis === 'x' && Math.abs(dx) >= MIN_SWIPE) go(current + (dx < 0 ? 1 : -1), true);
-    else if(axis === 'x') go(current);
+    if(axis === 'x' && Math.abs(dx) >= MIN_SWIPE) go(current + (dx < 0 ? 1 : -1));
+    else go(current);
     dx = 0;
-    axis = null;
   });
 
   // Mouse drag (desktop preview)
@@ -1242,7 +951,7 @@
     if(!mdown) return;
     mdown = false;
     pages.classList.remove('dragging');
-    if(Math.abs(dx) >= MIN_SWIPE) go(current + (dx < 0 ? 1 : -1), true);
+    if(Math.abs(dx) >= MIN_SWIPE) go(current + (dx < 0 ? 1 : -1));
     else go(current);
     dx = 0;
   });
@@ -1259,425 +968,11 @@
     c.addEventListener('click', ()=>{
       c.parentElement.querySelectorAll('.crop').forEach(x=>x.classList.remove('on'));
       c.classList.add('on');
-      if(window.updateDiagBtn) window.updateDiagBtn();
     });
   });
 
   go(0);
 })();
-
-// ===== AI 진단 =====
-let diagImageBase64 = null;
-const DIAG_ENDPOINT = 'https://xzetqijeucldbfgjuoes.supabase.co/functions/v1/bright-action';
-
-function diagOpenCamera() { document.getElementById('diagCameraInput').click(); }
-function diagOpenAlbum()  { document.getElementById('diagAlbumInput').click(); }
-
-function diagHandleFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    diagImageBase64 = e.target.result.split(',')[1];
-    document.getElementById('diagPreviewImg').src = e.target.result;
-    document.getElementById('diagPreviewWrap').classList.add('show');
-    updateDiagBtn();
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
-}
-
-function diagClearImage() {
-  diagImageBase64 = null;
-  document.getElementById('diagPreviewImg').src = '';
-  document.getElementById('diagPreviewWrap').classList.remove('show');
-  updateDiagBtn();
-}
-
-function updateDiagBtn() {
-  const cropEl = document.querySelector('.crop.on');
-  const crop = cropEl ? cropEl.textContent.trim() : '';
-  const symptom = (document.getElementById('diagSymptom')?.value || '').trim();
-  const hasCrop = crop && crop !== '전체';
-  const btn = document.getElementById('diagStartBtn');
-  if (btn) btn.disabled = !(hasCrop && (symptom || diagImageBase64));
-}
-
-async function runDiagnosis() {
-  const crop = (document.querySelector('.crop.on')?.textContent || '').trim();
-  const symptom = (document.getElementById('diagSymptom')?.value || '').trim();
-  const region = localStorage.getItem('kfarmai_region') || '';
-  const loading = document.getElementById('diagLoading');
-  const resultWrap = document.getElementById('diagResultWrap');
-  const btn = document.getElementById('diagStartBtn');
-
-  resultWrap.innerHTML = '';
-  loading.classList.add('show');
-  btn.disabled = true;
-  btn.textContent = '분석 중...';
-
-  const body = { symptom, crop_type: crop, region };
-  if (diagImageBase64) body.image_base64 = diagImageBase64;
-
-  try {
-    const res = await fetch(DIAG_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhaZXRxaWpldWNsZGJmZ2p1b2VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzMjUxMDMsImV4cCI6MjA2MzkwMTEwM30.Jx5oBXoUVvHlPjBmNqwJTyZH6lMVOFxwjTFjUBYlBnU' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error('서버 오류 ' + res.status);
-    const data = await res.json();
-    renderDiagResult(data, resultWrap);
-  } catch (err) {
-    resultWrap.innerHTML = `<div class="diag-result-card"><div class="diag-rc-body" style="color:#DC2626">진단에 실패했습니다.<br>${err.message || '잠시 후 다시 시도해주세요.'}</div></div>`;
-  } finally {
-    loading.classList.remove('show');
-    btn.textContent = '🔍 AI 진단 시작';
-    updateDiagBtn();
-  }
-}
-
-function renderDiagResult(data, wrap) {
-  const sections = [
-    { key: 'summary',    label: '문제 요약' },
-    { key: 'causes',     label: '원인 후보' },
-    { key: 'management', label: '일반 관리법' },
-    { key: 'materials',  label: '관련 자재군' }
-  ];
-  let html = '';
-  sections.forEach(({ key, label }) => {
-    const val = data[key];
-    if (!val) return;
-    const text = Array.isArray(val) ? val.join('\n') : String(val);
-    html += `<div class="diag-result-card"><div class="diag-rc-title">${label}</div><div class="diag-rc-body">${escDiag(text)}</div></div>`;
-  });
-  if (!html) {
-    const raw = data.result || data.message || data.answer || JSON.stringify(data);
-    html = `<div class="diag-result-card"><div class="diag-rc-body">${escDiag(String(raw))}</div></div>`;
-  }
-  html += `<div class="diag-disclaimer">※ AI 참고 진단입니다. 정확한 처방은 농약사 또는 전문가에게 문의하세요.</div>`;
-  html += `<button class="diag-map-btn" onclick="location.href='agri_map.html'">📍 가까운 농약사 문의하기</button>`;
-  wrap.innerHTML = html;
-}
-
-function escDiag(s) {
-  return String(s)
-    .replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
-    .replace(/\n/g, '<br>');
-}
-
-const SUPABASE_URL = 'https://xzetqijeucldbfgjuoes.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6ZXRxaWpldWNsZGJmZ2p1b2VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjIwODYsImV4cCI6MjA5NTEzODA4Nn0.QAizDLXQC1DrRi5C0sPahK6s_-6X4zkTEjzJZ6CFprw';
-const CHANNEL_CONFIG = {'plant-hospital':{icon:'ic-hospital',name:'식물 병원'},'plant-question':{icon:'ic-chat',name:'식물 질문방'},'crop-consult':{icon:'ic-wheat',name:'작물 상담방'},'plant-brag':{icon:'ic-camera',name:'내 식물 자랑'},'farmer-lounge':{icon:'ic-house',name:'농부 사랑방'},'plant-share':{icon:'ic-pot',name:'나눔·직거래'},'garden-class':{icon:'ic-class',name:'원예 클래스'},'plant-meet':{icon:'ic-people',name:'식집사 모임'}};
-const CHANNEL_BADGE_COLORS = {'plant-hospital':'green','plant-question':'blue','crop-consult':'orange','plant-share':'teal'};
-const sbScript = document.createElement('script');
-sbScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-sbScript.onload = () => { window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); initSupabaseApp(); };
-document.head.appendChild(sbScript);
-let currentUser = null;
-const I18N = {
-  ko: {
-    community: '커뮤니티',
-    diagnosis: 'AI 진단',
-    diagnosisShort: '진단',
-    agriData: '농자재',
-    qa: '질문',
-    nearby: '주변',
-    recentQuestions: '방금 올라온 질문',
-    exploreChannels: '채널 둘러보기',
-    heroTitle: '이상하다 싶을 때,<br/>바로 여기',
-    searchPlaceholder: '작물 증상, 농약사, 농자재를 검색하세요'
-  },
-  en: {
-    community: 'Community',
-    diagnosis: 'AI Diagnosis',
-    diagnosisShort: 'AI Diagnosis',
-    agriData: 'Agri Data',
-    qa: 'Q&A',
-    nearby: 'Nearby',
-    recentQuestions: 'Recent Questions',
-    exploreChannels: 'Explore Channels',
-    heroTitle: 'When Something Feels Off,<br/>Start Here',
-    searchPlaceholder: 'Search crops, pesticide shops, agri products...'
-  }
-};
-function initLanguage(){
-  const saved = localStorage.getItem('kfarmai_lang') || 'ko';
-  applyLanguage(saved);
-}
-function applyLanguage(lang){
-  const useLang = lang === 'en' ? 'en' : 'ko';
-  localStorage.setItem('kfarmai_lang', useLang);
-  document.documentElement.lang = useLang;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key = el.dataset.i18n;
-    if(I18N[useLang][key]) el.innerHTML = I18N[useLang][key];
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-    const key = el.dataset.i18nPlaceholder;
-    if(I18N[useLang][key]) el.placeholder = I18N[useLang][key];
-  });
-  document.querySelectorAll('.lang-toggle').forEach(btn=>{
-    btn.querySelector('.kr')?.classList.toggle('active', useLang === 'ko');
-    btn.querySelector('.en')?.classList.toggle('active', useLang === 'en');
-  });
-}
-function toggleLanguage(){
-  const next = (localStorage.getItem('kfarmai_lang') || 'ko') === 'ko' ? 'en' : 'ko';
-  applyLanguage(next);
-}
-initLanguage();
-async function initSupabaseApp(){
-  const {data:{session}}=await _sb.auth.getSession();
-  setMyState(session?.user || null);
-  if(session)updateUserUI(session.user);
-  _sb.auth.onAuthStateChange((event,session)=>{
-    setMyState(session?.user || null);
-    if(session)updateUserUI(session.user);
-    else resetUserUI();
-  });
-  loadChannels();
-  loadFeed();
-}
-function updateUserUI(user){
-  currentUser = user;
-  renderHeaderProfile(user);
-  renderMyProfile(user);
-  loadMyCounts(user.id);
-  _sb.from('users').upsert({id:user.id,nickname:user.user_metadata?.full_name||user.email?.split('@')[0]||'익명',email:user.email,role:'user'},{onConflict:'id'}).then(()=>{});
-}
-function resetUserUI(){
-  currentUser = null;
-  const bell=document.getElementById('headerProfile');
-  if(!bell)return;
-  bell.classList.remove('logged-in');
-  bell.onclick=()=>openMyPanel();
-  bell.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
-}
-function setMyState(user){
-  currentUser = user;
-  const loggedOut=document.getElementById('myLoggedOut');
-  const loggedIn=document.getElementById('myLoggedIn');
-  if(loggedOut)loggedOut.style.display = user ? 'none' : 'block';
-  if(loggedIn)loggedIn.style.display = user ? 'block' : 'none';
-}
-function renderHeaderProfile(user){
-  const bell=document.getElementById('headerProfile');
-  if(!bell)return;
-  const avatar=user.user_metadata?.avatar_url || user.user_metadata?.picture;
-  const initial=getInitial(user);
-  bell.classList.add('logged-in');
-  bell.onclick=()=>openMyPanel();
-  bell.innerHTML=avatar ? `<img src="${escAttr(avatar)}" alt="profile">` : `<span class="profile-initial">${escHtml(initial)}</span>`;
-}
-function renderMyProfile(user){
-  const name=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'사용자';
-  const email=user.email||'';
-  const avatar=user.user_metadata?.avatar_url || user.user_metadata?.picture;
-  const avatarEl=document.getElementById('myAvatar');
-  document.getElementById('myName').textContent=name;
-  document.getElementById('myEmail').textContent=email;
-  if(avatarEl)avatarEl.innerHTML=avatar ? `<img src="${escAttr(avatar)}" alt="profile">` : escHtml(getInitial(user));
-}
-async function loadMyCounts(userId){
-  if(!window._sb||!userId)return;
-  try{
-    const [{count:postCount},{count:diagnosisCount}] = await Promise.all([
-      _sb.from('posts').select('id',{count:'exact',head:true}).eq('user_id',userId),
-      _sb.from('diagnoses').select('id',{count:'exact',head:true}).eq('user_id',userId)
-    ]);
-    document.getElementById('myPostCount').textContent=postCount ?? 0;
-    document.getElementById('myDiagnosisCount').textContent=diagnosisCount ?? 0;
-  }catch(e){
-    document.getElementById('myPostCount').textContent='0';
-    document.getElementById('myDiagnosisCount').textContent='0';
-  }
-}
-function getInitial(user){return (user.user_metadata?.full_name||user.user_metadata?.name||user.email||'U').trim()[0].toUpperCase();}
-async function loadChannels(){const grid=document.getElementById('channelGrid');const select=document.getElementById('channelSelect');if(!grid||!select||!window._sb)return;try{const {data}=await _sb.from('channels').select('*').order('slug');renderChannels(data&&data.length?data:defaultChannels(),grid,select);}catch(e){renderChannels(defaultChannels(),grid,select);}}
-function defaultChannels(){return Object.entries(CHANNEL_CONFIG).map(([slug,cfg])=>({slug,name:cfg.name,id:slug}));}
-function renderChannels(channels,grid,select){grid.innerHTML='';select.innerHTML='<option value="">채널을 선택하세요</option>';channels.forEach(ch=>{const cfg=CHANNEL_CONFIG[ch.slug]||{icon:'ic-chat',name:ch.name||'일반'};const card=document.createElement('div');card.className='channel';card.innerHTML=`<div class="ch-icon-wrap"><svg><use href="#${cfg.icon}"/></svg></div><div class="ch-name">${escHtml(ch.name||cfg.name)}</div>`;card.onclick=()=>{location.href=ch.slug?`channel.html?slug=${encodeURIComponent(ch.slug)}`:'channel.html';};grid.appendChild(card);const opt=document.createElement('option');opt.value=ch.id;opt.textContent=ch.name||cfg.name;select.appendChild(opt);});}
-async function loadFeed(channelId=null){const feed=document.getElementById('recentFeed');if(!feed||!window._sb)return;feed.innerHTML='<div class="feed-loading"><div class="spinner"></div>불러오는 중...</div>';try{let query=_sb.from('posts').select('*, channels(name, slug)').order('created_at',{ascending:false}).limit(5);if(channelId)query=query.eq('channel_id',channelId);const {data}=await query;if(!data||data.length===0){feed.innerHTML='<div class="feed-loading">아직 질문이 없습니다.<br>첫 질문을 올려보세요.</div>';return;}feed.innerHTML='';data.forEach(post=>{const slug=post.channels?.slug||'';const badgeClass=CHANNEL_BADGE_COLORS[slug]||'green';const card=document.createElement('div');card.className='q-card';card.style.cursor='pointer';card.onclick=()=>{location.href=`post.html?id=${post.id}`;};card.innerHTML=`<span class="ch-badge ${badgeClass}">${escHtml(post.channels?.name||'일반')}</span><div class="q-title">${escHtml(post.title)}</div><div class="q-meta"><span>${post.user_id?'회원':'익명 작성자'}</span><span>댓글 ${post.comment_count||0}</span><span>좋아요 ${post.like_count||0}</span><span>${getTimeAgo(post.created_at)}</span></div>`;feed.appendChild(card);});}catch(e){feed.innerHTML='<div class="feed-loading">불러오기 실패. 새로고침해주세요.</div>';}}
-function filterByChannel(id,name){loadFeed(id);const title=document.querySelector('#recentFeed')?.previousElementSibling?.querySelector('.section-title');if(title)title.textContent=`${name} 질문`;}
-const SEARCH_STORAGE_KEY='kfarmai_recent_searches';
-const CHO_LIST=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-const AGRI_LINKS=[
-  {type:'map',label:'농약사',initial:'ㄴㅇㅅ',url:'agri_map.html',text:'농약사 - 지도에서 보기'},
-  {type:'material',label:'상토',initial:'ㅅㅌ',url:'santo.html',text:'상토 정보 보기'},
-  {type:'material',label:'종자',initial:'ㅈㅈ',url:'seed.html',text:'종자 정보 보기'},
-  {type:'material',label:'작물보호제',initial:'ㅈㅁㅂㅎㅈ',url:'cpa.html',text:'작물보호제 정보 보기'},
-  {type:'material',label:'비료',initial:'ㅂㄹ',url:'fert.html',text:'비료 정보 보기'}
-];
-const SEARCH_ALIASES=[
-  {label:'식물 병원',initial:'ㅅㅂ'},
-  {label:'질문',initial:'ㅈㅁ'},
-  {label:'농약사',initial:'ㄴㅇㅅ'},
-  {label:'상토',initial:'ㅅㅌ'},
-  {label:'비료',initial:'ㅂㄹ'}
-];
-function initSearch(){
-  const input=document.getElementById('globalSearch');
-  if(!input)return;
-  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runSearch();}});
-  input.addEventListener('search',()=>runSearch());
-  input.addEventListener('input',debounce(()=>renderSearchDropdown(input.value.trim()),180));
-  input.addEventListener('focus',()=>{if(input.value.trim().length>=2)renderSearchDropdown(input.value.trim());});
-  document.addEventListener('click',e=>{if(!document.getElementById('searchBox')?.contains(e.target))closeSearchDropdown();});
-}
-function debounce(fn,delay){let timer;return(...args)=>{clearTimeout(timer);timer=setTimeout(()=>fn(...args),delay);};}
-async function renderSearchDropdown(raw){
-  const dd=document.getElementById('searchDropdown');
-  if(!dd)return;
-  const kw=normalizeKeyword(raw);
-  if(kw.length<2){closeSearchDropdown();return;}
-  dd.classList.add('open');
-  dd.innerHTML='<div class="feed-loading"><div class="spinner"></div>검색 중...</div>';
-  const posts=await searchPosts(kw,3);
-  const shopItems=getShopSuggestions(kw,2);
-  const matItems=getMaterialSuggestions(kw,2);
-  const recent=getRecentSearches();
-  dd.innerHTML=[
-    renderSuggestSection('커뮤니티 게시글',posts.map(p=>postSuggestHtml(p,kw))),
-    renderSuggestSection('농약사',shopItems.map(item=>linkSuggestHtml(item,kw,'지도'))),
-    renderSuggestSection('농자재',matItems.map(item=>linkSuggestHtml(item,kw,'정보'))),
-    renderRecentSection(recent)
-  ].filter(Boolean).join('');
-}
-function renderSuggestSection(title,items){
-  if(!items.length)return '';
-  return `<div class="s-section"><div class="s-head">${title}</div>${items.join('')}</div>`;
-}
-function postSuggestHtml(post,kw){
-  const slug=post.channels?.slug||'';
-  const badgeClass=CHANNEL_BADGE_COLORS[slug]||'green';
-  return `<div class="s-item" onclick="runSearch(decodeURIComponent('${encodeURIComponent(kw)}'))"><div class="s-ico">Q</div><div class="s-main"><div><span class="ch-badge ${badgeClass}">${escHtml(post.channels?.name||'일반')}</span></div><div class="s-title">${highlightText(post.title,kw)}</div><div class="s-meta">${getTimeAgo(post.created_at)}</div></div></div>`;
-}
-function linkSuggestHtml(item,kw,kind){
-  const url=`${item.url}?q=${encodeURIComponent(item.query||kw)}`;
-  return `<a class="s-item" href="${url}"><div class="s-ico">${kind==='지도'?'M':'I'}</div><div class="s-main"><div class="s-title">${highlightText(item.text,kw)}</div><div class="s-meta">${escHtml(item.meta||`${kind}에서 보기`)}</div></div></a>`;
-}
-function renderRecentSection(items){
-  if(!items.length)return '';
-  return `<div class="s-section"><div class="s-head"><span>최근 검색어</span><button class="s-clear" onclick="clearRecentSearches(event)">전체 삭제</button></div>${items.map(item=>`<div class="s-item" onclick="runSearch(decodeURIComponent('${encodeURIComponent(item)}'))"><div class="s-ico">R</div><div class="s-main"><div class="s-title">${escHtml(item)}</div></div><button class="s-x" onclick="removeRecentSearch(event,decodeURIComponent('${encodeURIComponent(item)}'))">×</button></div>`).join('')}</div>`;
-}
-async function runSearch(raw){
-  const input=document.getElementById('globalSearch');
-  const kw=normalizeKeyword(raw || input?.value || '');
-  if(!kw)return;
-  if(input)input.value=kw;
-  closeSearchDropdown();
-  saveRecentSearch(kw);
-  if(window.goMainPage)window.goMainPage();
-  const feed=document.getElementById('recentFeed');
-  if(!feed)return;
-  feed.innerHTML='<div class="feed-loading"><div class="spinner"></div>검색 중...</div>';
-  const posts=await searchPosts(kw,30);
-  const shops=getShopSuggestions(kw,20);
-  const materials=getMaterialSuggestions(kw,30);
-  renderSearchResults(kw,posts,shops,materials);
-}
-async function searchPosts(kw,limit){
-  if(!window._sb)return [];
-  try{
-    const like=`%${kw.replace(/[%_]/g,'')}%`;
-    const {data}=await _sb.from('posts').select('*, channels(name, slug)').or(`title.ilike.${like},content.ilike.${like}`).order('created_at',{ascending:false}).limit(limit);
-    let list=data||[];
-    if(isInitialQuery(kw)){
-      const {data:recent}=await _sb.from('posts').select('*, channels(name, slug)').order('created_at',{ascending:false}).limit(40);
-      list=(recent||[]).filter(p=>matchesSearchText(`${p.title||''} ${p.content||''} ${p.channels?.name||''}`,kw)).slice(0,limit);
-    }
-    return list;
-  }catch(e){return [];}
-}
-function renderSearchResults(kw,posts,shops,materials){
-  const feed=document.getElementById('recentFeed');
-  const total=posts.length+shops.length+materials.length;
-  const head=`<div class="search-result-head"><span>'${escHtml(kw)}' 검색 결과 ${total}개</span><button class="search-close" onclick="clearSearchResults()">×</button></div>`;
-  if(!total){feed.innerHTML=head+'<div class="feed-loading">검색 결과가 없습니다</div>';return;}
-  const postHtml=posts.map(post=>{
-    const slug=post.channels?.slug||'';
-    const badgeClass=CHANNEL_BADGE_COLORS[slug]||'green';
-    return `<div class="q-card"><span class="ch-badge ${badgeClass}">${escHtml(post.channels?.name||'일반')}</span><div class="q-title">${highlightText(post.title,kw)}</div><div class="q-meta"><span>${post.user_id?'회원':'익명 작성자'}</span><span>댓글 ${post.comment_count||0}</span><span>좋아요 ${post.like_count||0}</span><span>${getTimeAgo(post.created_at)}</span></div></div>`;
-  }).join('');
-  const shopHtml=shops.map(item=>resultLinkCard(item,kw,'농약사')).join('');
-  const materialHtml=materials.map(item=>resultLinkCard(item,kw,'농자재')).join('');
-  feed.innerHTML=head+
-    (posts.length?'<div class="search-group-title">커뮤니티 게시글</div>'+postHtml:'')+
-    (shops.length?'<div class="search-group-title">농약사 지도·로드뷰</div>'+shopHtml:'')+
-    (materials.length?'<div class="search-group-title">농자재 회사 정보</div>'+materialHtml:'');
-}
-function resultLinkCard(item,kw,badge){
-  return `<a class="q-card" href="${item.url}?q=${encodeURIComponent(item.query||kw)}" style="display:block;text-decoration:none;color:inherit"><span class="ch-badge teal">${badge}</span><div class="q-title">${highlightText(item.text,kw)}</div><div class="q-meta"><span>${escHtml(item.meta||'정보 보기')}</span></div></a>`;
-}
-function clearSearchResults(){
-  const input=document.getElementById('globalSearch');
-  if(input)input.value='';
-  closeSearchDropdown();
-  loadFeed();
-}
-function closeSearchDropdown(){document.getElementById('searchDropdown')?.classList.remove('open');}
-function getShopSuggestions(kw,limit=2){
-  const shops=typeof data!=='undefined'?data:[];
-  const matched=shops.filter(shop=>matchesSearchText([shop.name,shop.addr,shop.tel,shop.item,'농약사 농약방'].join(' '),kw)).slice(0,limit).map(shop=>({
-    type:'map',
-    url:'agri_map.html',
-    query:shop.name,
-    text:`${shop.name} - 지도·로드뷰에서 보기`,
-    meta:shop.addr||'지도에서 보기'
-  }));
-  if(matched.length)return matched;
-  return matchesSearchText('농약사 농약방 주변농약방 내 주변 농자재점 ㄴㅇㅅ',kw)?[
-    {...AGRI_LINKS[0],query:kw,text:`${kw} 농약사 - 지도·로드뷰에서 보기`,meta:'agri_map.html 검색'}
-  ]:[];
-}
-function getMaterialSuggestions(kw,limit=6){
-  const datasets=[
-    {kind:'상토',url:'santo.html',items:typeof santoData!=='undefined'?santoData:[]},
-    {kind:'종자',url:'seed.html',items:typeof seedData!=='undefined'?seedData:[]},
-    {kind:'작물보호제',url:'cpa.html',items:typeof cpaData!=='undefined'?cpaData:[]},
-    {kind:'비료',url:'fert.html',items:typeof fertData!=='undefined'?fertData:[]}
-  ];
-  const results=[];
-  datasets.forEach(ds=>{
-    ds.items.forEach(item=>{
-      const text=[ds.kind,item.company,item.products,item.addr,item.tel].join(' ');
-      if(matchesSearchText(text,kw)){
-        results.push({
-          type:'material',
-          url:ds.url,
-          query:item.company,
-          text:`${item.company} - ${ds.kind} 정보 보기`,
-          meta:item.products||item.addr||`${ds.kind} 검색`
-        });
-      }
-    });
-  });
-  if(results.length)return results.slice(0,limit);
-  if(matchesSearchText('농자재 농자재회사 농업자재 agri products',kw))return AGRI_LINKS.filter(item=>item.type==='material').map(item=>({...item,query:kw,meta:'농자재 정보 페이지'})).slice(0,limit);
-  return AGRI_LINKS.filter(item=>item.type==='material'&&matchesSearchText(`${item.label} ${item.initial} ${item.text}`,kw)).map(item=>({...item,query:kw,meta:'농자재 정보 페이지'})).slice(0,limit);
-}
-function matchesSearchText(text,kw){const hay=String(text||'').toLowerCase();const compactHay=hay.replace(/\s/g,'');const needle=String(kw||'').toLowerCase();return hay.includes(needle)||compactHay.includes(needle.replace(/\s/g,''))||getInitials(hay).includes(needle)||SEARCH_ALIASES.some(a=>(a.initial===needle||a.label.includes(needle))&&compactHay.includes(a.label.toLowerCase().replace(/\s/g,'')));}
-function getInitials(text){return String(text||'').split('').map(ch=>{const code=ch.charCodeAt(0)-44032;if(code>=0&&code<=11171)return CHO_LIST[Math.floor(code/588)];return ch;}).join('');}
-function isInitialQuery(kw){return /^[ㄱ-ㅎ]+$/.test(kw);}
-function normalizeKeyword(value){return String(value||'').trim().replace(/\s+/g,' ');}
-function highlightText(text,kw){const safe=escHtml(text||'');if(!kw||isInitialQuery(kw))return safe;const escaped=kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return safe.replace(new RegExp(`(${escaped})`,'gi'),'<span class="search-mark">$1</span>');}
-function getRecentSearches(){try{return JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY)||'[]');}catch(e){return [];}}
-function saveRecentSearch(kw){const list=getRecentSearches().filter(item=>item!==kw);list.unshift(kw);localStorage.setItem(SEARCH_STORAGE_KEY,JSON.stringify(list.slice(0,5)));}
-function removeRecentSearch(event,kw){event.stopPropagation();localStorage.setItem(SEARCH_STORAGE_KEY,JSON.stringify(getRecentSearches().filter(item=>item!==kw)));renderSearchDropdown(document.getElementById('globalSearch')?.value||'');}
-function clearRecentSearches(event){event.stopPropagation();localStorage.removeItem(SEARCH_STORAGE_KEY);renderSearchDropdown(document.getElementById('globalSearch')?.value||'');}
-initSearch();
-async function submitPost(){const channelId=document.getElementById('channelSelect').value;const title=document.getElementById('postTitle').value.trim();const content=document.getElementById('postContent').value.trim();if(!channelId||!title){alert('채널과 제목을 입력해주세요.');return;}const {data:{session}}=await _sb.auth.getSession();const {error}=await _sb.from('posts').insert({channel_id:channelId,title,content,user_id:session?.user?.id||null});if(error){alert('등록 실패: '+error.message);return;}closeModal();document.getElementById('postTitle').value='';document.getElementById('postContent').value='';loadFeed();}
-function openModal(){document.getElementById('writeModal').classList.add('open');}
-function closeModal(){document.getElementById('writeModal').classList.remove('open');}
-function openMyPanel(){document.getElementById('myPanel').classList.add('open');}
-function closeMyPanel(){document.getElementById('myPanel').classList.remove('open');}
-function openLogin(){openMyPanel();}
-function closeLogin(){closeMyPanel();}
-async function loginGoogle(){const {error}=await _sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://kfarmai.com'}});if(error)alert('로그인 실패: '+error.message);}
-async function logout(){if(!_sb)return;await _sb.auth.signOut();setMyState(null);resetUserUI();closeMyPanel();}
-function getTimeAgo(dateStr){const diff=(Date.now()-new Date(dateStr))/1000;if(diff<60)return '방금 전';if(diff<3600)return Math.floor(diff/60)+'분 전';if(diff<86400)return Math.floor(diff/3600)+'시간 전';return Math.floor(diff/86400)+'일 전';}
-function escHtml(str){return(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function escAttr(str){return escHtml(str).replace(/'/g,'&#39;');}
 </script>
 </body>
 </html>
